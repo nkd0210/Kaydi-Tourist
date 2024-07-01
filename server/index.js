@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 
 import authRoute from './routes/authRoute.js';
+import userRoute from './routes/userRoute.js';
 
 dotenv.config();
 
@@ -27,4 +28,5 @@ app.listen(3000, () => {
     console.log("Server listening on port 3000")
 })
 
-app.use('/api/auth', authRoute)
+app.use('/api/auth', authRoute);
+app.use('/api/user', userRoute)
