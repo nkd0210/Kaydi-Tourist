@@ -116,10 +116,11 @@ const ProfilePage = () => {
         }
     }, [image])
 
+
     return (
-        <div className='flex h-screen justify-center items-center my-[20px]'>
+        <div className='flex h-screen justify-center items-center my-[20px] max-md:my-0'>
             <ToastContainer />
-            <div className="w-1/3 max-md:w-full border border-black rounded-[10px]  ">
+            <div className="w-1/2 max-md:w-full border border-black rounded-[10px]  ">
 
                 <div className='relative'>
                     {/* BACKGROUND IMAGE */}
@@ -148,7 +149,7 @@ const ProfilePage = () => {
                             onClick={() => fileRef.current.click()}
                             src={formData.profilePic || currentUser.profilePic}
                             alt=""
-                            className='cursor-pointer avaImage w-[80px] h-[80px] object-cover rounded-[50%] p-[2px] '
+                            className='cursor-pointer avaImage w-[100px] h-[80px] object-cover rounded-[50%]  '
                         />
                         <p>
                             {imageFileUploadError ? (

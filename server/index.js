@@ -6,6 +6,7 @@ import cors from "cors";
 
 import authRoute from './routes/authRoute.js';
 import userRoute from './routes/userRoute.js';
+import listingRoute from './routes/listingRoute.js';
 
 dotenv.config();
 
@@ -30,3 +31,4 @@ app.listen(3000, () => {
 
 app.use('/api/auth', authRoute);
 app.use('/api/user', userRoute)
+app.use('/api/listing', listingRoute)
