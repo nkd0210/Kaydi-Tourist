@@ -71,9 +71,9 @@ export const getListing = async (req, res, next) => {
     try {
         let listings;
         if (qCategory) {
-            listings = await Listing.find({ category: qCategory }).populate(creator);
+            listings = await Listing.find({ category: qCategory }).populate("creator");
         } else {
-            listings = await Listing.find();
+            listings = await Listing.find().populate("creator");
         }
 
         res.status(200).json(listings);
@@ -82,3 +82,10 @@ export const getListing = async (req, res, next) => {
     }
 }
 
+export const getDetailListing = async (req,res,next) => {
+    const findListing = await Listing.findById(req.params.listingId).populate("creator");
+    if (!findListing) {
+        return res.status(404).json({ message: "Listing not found" });
+    }
+    res.status(200).json(findListing);
+}

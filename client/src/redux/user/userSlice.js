@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   currentUser: null,
   error: null,
+  listings: null
 };
 
 const userSlice = createSlice({
@@ -52,6 +53,10 @@ const userSlice = createSlice({
     deleteUserFailure: (state, action) => {
       state.error = action.payload;
     },
+    setListings: (state, action) => {
+      state.listings = action.payload;
+      state.error = null;
+    }
   },
 });
 
@@ -69,6 +74,7 @@ export const {
   deleteUserStart,
   deleteUserSuccess,
   deleteUserFailure,
+  setListings
 } = userSlice.actions;
 
 export default userSlice.reducer;

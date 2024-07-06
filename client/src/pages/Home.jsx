@@ -1,7 +1,7 @@
 import Categories from '../components/Categories';
 import Navbar from '../components/Navbar';
 import Slide from '../components/Slide';
-
+import Listings from '../components/Listings';
 const Home = () => {
 
   return (
@@ -9,6 +9,7 @@ const Home = () => {
       <Navbar />
       <Slide />
       <Categories />
+      <Listings />
     </>
   )
 }
