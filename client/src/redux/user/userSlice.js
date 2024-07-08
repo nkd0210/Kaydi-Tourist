@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   currentUser: null,
   error: null,
-  listings: null
+  listings: null,
 };
 
 const userSlice = createSlice({
@@ -56,7 +56,23 @@ const userSlice = createSlice({
     setListings: (state, action) => {
       state.listings = action.payload;
       state.error = null;
-    }
+    },
+    setTripList: (state, action) => {
+      state.currentUser.tripList = action.payload;
+      state.error = null;
+    },
+    setWishList: (state, action) => {
+      state.currentUser.wishList = action.payload;
+      state.error = null;
+    },
+    setPropertyList: (state, action) => {
+      state.currentUser.propertyList = action.payload;
+      state.error = null;
+    },
+    setReservationList: (state, action) => {
+      state.currentUser.reservationList = action.payload;
+      state.error = null;
+    },
   },
 });
 
@@ -74,7 +90,11 @@ export const {
   deleteUserStart,
   deleteUserSuccess,
   deleteUserFailure,
-  setListings
+  setListings,
+  setWishList,
+  setTripList,
+  setPropertyList,
+  setReservationList,
 } = userSlice.actions;
 
 export default userSlice.reducer;

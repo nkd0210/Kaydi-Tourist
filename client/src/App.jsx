@@ -6,6 +6,9 @@ import SignUp from './pages/SignUp'
 import ProfilePage from './pages/ProfilePage'
 import CreatePlace from './pages/CreatePlace'
 import ListingDetail from './pages/ListingDetail'
+import Trip from './pages/TripList'
+import WishList from './pages/WishList'
+import PropertyList from './pages/PropertyList'
 
 function App() {
 
@@ -18,6 +21,9 @@ function App() {
         <Route path='/profile' element={<ProfilePage />} />
         <Route path='/createPlace' element={<CreatePlace />} />
         <Route path='/detailplace/:listingId' element={<ListingDetail />} />
+        <Route path='/trip/:userId' element={<Trip />} />
+        <Route path='/wishlist/:userId' element={<WishList />} />
+        <Route path='/propertylist/:userId' element={<PropertyList />} />
       </Routes>
     </BrowserRouter>
   )

@@ -161,7 +161,7 @@ const Listings = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const { currentUser,listings } = useSelector((state) => state.user);
+    const { currentUser, listings } = useSelector((state) => state.user);
 
     const [loading, setLoading] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState("All");
@@ -187,7 +187,7 @@ const Listings = () => {
     useEffect(() => {
         fetchListing();
     }, [selectedCategory])
-   
+
 
     return (
         <Wrapper>
@@ -205,10 +205,32 @@ const Listings = () => {
             </div>
 
             {loading ? (<Loader />) : (
-                
+
                 <div className='contain mx-[80px]'>
-                    {listings.map((listing, index) => (
-                        <ListingCard key={index} listing={listing} />
+                    {listings.map(({
+                        _id,
+                        creator,
+                        listingPhotoPaths,
+                        city,
+                        province,
+                        country,
+                        category,
+                        type,
+                        price,
+                        booking = false
+                    }) => (
+                        <ListingCard
+                            key={_id}
+                            listingId={_id}
+                            creator={creator}
+                            listingPhotoPaths={listingPhotoPaths}
+                            city={city}
+                            province={province}
+                            country={country}
+                            category={category}
+                            type={type}
+                            price={price}
+                            booking={booking} />
                     ))}
                 </div>
             )}

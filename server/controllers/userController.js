@@ -1,5 +1,7 @@
 import User from "../models/userModel.js";
 import bcryptjs from "bcryptjs";
+import Booking from '../models/bookingModel.js';
+import List from '../models/listingModel.js';
 
 export const getAllUsers = async (req, res, next) => {
     if (!req.user.isAdmin) {
@@ -92,3 +94,66 @@ export const deleteUser = async (req, res, next) => {
         next(error);
     }
 };
+
+export const getTripList = async (req, res, next) => {
+    try {
+        const userId = req.params.userId;
+
+        const trip = await Booking.find({ customerId: userId }).populate("customerId hostId listingId")
+
+        if (!trip) {
+            return res.status(404).json({ message: "No trips found for this user" });
+        } else {
+            res.status(200).json(trip);
+        }
+
+    } catch (error) {
+        next(error);
+    }
+}
+
+export const favoriteTrip = async (req, res, next) => {
+    try {
+        const { userId, listingId } = req.params;
+        const user = await User.findById(userId);
+        const listing = await List.findById(listingId).populate("creator");
+        
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        if (!listing) {
+            return res.status(404).json({ message: "Listing not found" });
+        }
+
+        const favoriteListing = user.wishList.find((item) => item._id.toString() === listingId);
+
+        if (favoriteListing) {
+            user.wishList = user.wishList.filter((item) => item._id.toString() !== listingId);
+            await user.save();
+            res.status(200).json({ message: "Remove favourite listing from wishlist", wishList: user.wishList });
+        } else {
+            user.wishList.push(listing);
+            await user.save();
+            res.status(200).json({ message: "Add favourite listing to wishlist", wishList: user.wishList });
+        }
+
+    } catch (error) {
+        next(error);
+        res.status(400).json({message: "Add to wishlist failed"})
+    }
+}
+
+export const propertyList = async(req,res,next) => {
+    try {
+        const userId = req.params.userId;
+        const properties = await List.find({creator: userId}).populate("creator");
+        if(!properties) {
+            return res.status(404).json({message: "This user dont have any property list"});
+        }else {
+            res.status(200).json(properties);
+        }
+    } catch (error) {
+        next(error);
+    }
+}

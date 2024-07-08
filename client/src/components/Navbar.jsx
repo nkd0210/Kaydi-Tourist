@@ -63,9 +63,9 @@ const Navbar = () => {
             {/* RIGHT */}
             <div className='flex justify-center items-center text-center gap-[20px]'>
                 {currentUser ? (
-                    <Link to='/createPlace' className='max-md:hidden border border-gray-500 rounded-[20px] px-[20px] py-[10px]  hover:bg-gray-200'>Create your place</Link>
+                    <Link to='/createPlace' className='max-md:hidden border border-gray-500 rounded-[20px] px-[20px] py-[10px]  hover:bg-gray-200'>Create your trip</Link>
                 ) : (
-                    <Link to='/signin' className='border border-gray-500 rounded-[20px] px-[20px] py-[10px] hover:bg-gray-200 '>Create your place</Link>
+                    <Link to='/signin' className='border border-gray-500 rounded-[20px] px-[20px] py-[10px] hover:bg-gray-200 '>Create your trip</Link>
                 )}
 
                 <button className=' flex border border-gray-500 rounded-[20px] p-[10px] gap-[10px] items-center justify-center' >
@@ -90,11 +90,12 @@ const Navbar = () => {
 
                 {dropdownMenu && currentUser && (
                     <div className='absolute right-[20px] max-md:right-[10px] top-[90px] max-md:top-[90px] border shadow-lg rounded-[10px] flex flex-col z-30 '>
-                        <Link className=' bg-gray-100 border-b-[1px] border-gray-400 p-[8px] hover:bg-gray-200 rounded-t-[10px]'>Trip List</Link>
-                        <Link className=' bg-gray-100 border-b-[1px] border-gray-400 p-[8px] hover:bg-gray-200'>Wish List</Link>
-                        <Link className=' bg-gray-100 border-b-[1px] border-gray-400 p-[8px] hover:bg-gray-200'>Property List</Link>
+                        <Link className=' bg-gray-100 border-b-[1px] border-gray-400 p-[8px] hover:bg-gray-200 rounded-t-[10px]'>Message</Link>
+                        <Link to={`/trip/${currentUser._id}`} className=' bg-gray-100 border-b-[1px] border-gray-400 p-[8px] hover:bg-gray-200'>Booked Trip</Link>
+                        <Link to={`/wishlist/${currentUser._id}`} className=' bg-gray-100 border-b-[1px] border-gray-400 p-[8px] hover:bg-gray-200'>Favorite Trip</Link>
+                        <Link to={`/propertylist/${currentUser._id}`} className=' bg-gray-100 border-b-[1px] border-gray-400 p-[8px] hover:bg-gray-200'>Your Trip</Link>
                         <Link className=' bg-gray-100 border-b-[1px] border-gray-400 p-[8px] hover:bg-gray-200'>Reservation List</Link>
-                        <Link to='/createPlace' className='bg-gray-100 border-b-[1px] border-gray-400 p-[8px] hover:bg-gray-200'>Create your place</Link>
+                        <Link to='/createPlace' className='bg-gray-100 border-b-[1px] border-gray-400 p-[8px] hover:bg-gray-200'>Create your trip</Link>
                         <Link className='bg-gray-100 p-[8px] hover:bg-gray-200 rounded-b-[10px] text-red-400' onClick={handleSignOut}>Log out</Link>
                     </div>
                 )}

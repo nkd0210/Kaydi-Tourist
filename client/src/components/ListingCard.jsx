@@ -1,17 +1,22 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-
+import { setWishList } from '../redux/user/userSlice';
 import { useNavigate, Link } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 
-import {Favorite} from "@mui/icons-material";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+import { Favorite } from "@mui/icons-material";
 import { FaRegHeart } from "react-icons/fa";
 
-const ListingCard = ({ listing, index }) => {
-    const { _id, creator, listingPhotoPaths, city, province, country, category, type, price } = listing;
+
+
+const ListingCard = ({ listingId, creator, listingPhotoPaths, city, province, country, category, type, price, startDate, endDate, totalPrice, booking, }) => {
 
     var settings = {
         dots: false,
@@ -21,10 +26,47 @@ const ListingCard = ({ listing, index }) => {
         slidesToScroll: 1
     };
 
+    const { currentUser } = useSelector((state) => state.user);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const wishList = currentUser?.wishList || [];
+    const isLiked = wishList?.find((item) => item?._id === listingId);
+
+    const handleShowErrorMessage = (message) => {
+        toast.error(message)
+    }
+
+    const handleAddToWishList = async () => {
+        if (currentUser?._id === creator._id) {
+            handleShowErrorMessage("You can't add your creation");
+            return;
+        } else {
+            const res = await fetch(`/api/user/trip/${currentUser?._id}/${listingId}`, {
+                method: "PUT",
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            const data = await res.json();
+            if (!res.ok) {
+                console.log(data.message)
+            } else {
+                dispatch(setWishList(data.wishList));
+            }
+        }
+    }
+
+    const handleClickHeart = (e) => {
+        e.stopPropagation();
+        handleAddToWishList();
+    }
+
     return (
         <Wrapper>
-            <Link to={`/detailplace/${_id}`}>
-                <div className='relative mb-[100px]'>
+            <ToastContainer />
+            {currentUser ? (
+                <div onClick={() => { navigate(`/detailplace/${listingId}`) }} className='relative mb-[100px]'>
                     {/* IMAGE */}
                     <div className=' w-[300px] h-[200px]'>
                         <Slider {...settings}>
@@ -35,8 +77,13 @@ const ListingCard = ({ listing, index }) => {
                             ))}
                         </Slider>
                     </div>
-
-                    <Favorite  className='absolute top-[10px] right-[10px] text-[20px] text-white cursor-pointer'/>
+                    <button type='button' onClick={handleClickHeart} disabled={!currentUser} className='absolute top-[10px] right-[10px]'>
+                        {isLiked ? (
+                            <Favorite className='text-red-400 text-[20px] cursor-pointer' />
+                        ) : (
+                            <Favorite className='text-white text-[20px] cursor-pointer' />
+                        )}
+                    </button>
 
                     {/* INFORMATION */}
                     <h3 className='text-[16px] font-semibold'>
@@ -50,7 +97,39 @@ const ListingCard = ({ listing, index }) => {
                     </div>
 
                 </div>
-            </Link>
+
+            ) : (
+                <Link to='/signin'>
+                    <div className='relative mb-[100px]'>
+                        {/* IMAGE */}
+                        <div className=' w-[300px] h-[200px]'>
+                            <Slider {...settings}>
+                                {listingPhotoPaths.map((photo, index) => (
+                                    <div key={index} className='w-[300px] h-[200px]'>
+                                        <img src={photo} alt="" className='w-full h-full object-cover' />
+                                    </div>
+                                ))}
+                            </Slider>
+                        </div>
+                        <button type='button' onClick={handleClickHeart} disabled={!currentUser} className='absolute top-[10px] right-[10px]'>
+                            <Favorite className={`text-white text-[20px] cursor-pointer`} />
+                        </button>
+
+                        {/* INFORMATION */}
+                        <h3 className='text-[16px] font-semibold'>
+                            {city}, {province}, {country}
+                        </h3>
+
+                        <p className='text-[16px] '>{category}</p>
+                        <div>
+                            <p>{type}</p>
+                            <p><span className='font-semibold'>${price} </span>per night</p>
+                        </div>
+
+                    </div>
+                </Link>
+            )}
+
         </Wrapper>
     )
 }
