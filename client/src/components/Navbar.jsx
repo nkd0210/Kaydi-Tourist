@@ -94,7 +94,7 @@ const Navbar = () => {
                         <Link to={`/trip/${currentUser._id}`} className=' bg-gray-100 border-b-[1px] border-gray-400 p-[8px] hover:bg-gray-200'>Booked Trip</Link>
                         <Link to={`/wishlist/${currentUser._id}`} className=' bg-gray-100 border-b-[1px] border-gray-400 p-[8px] hover:bg-gray-200'>Favorite Trip</Link>
                         <Link to={`/propertylist/${currentUser._id}`} className=' bg-gray-100 border-b-[1px] border-gray-400 p-[8px] hover:bg-gray-200'>Your Trip</Link>
-                        <Link className=' bg-gray-100 border-b-[1px] border-gray-400 p-[8px] hover:bg-gray-200'>Reservation List</Link>
+                        <Link to={`/reservationlist/${currentUser._id}`} className=' bg-gray-100 border-b-[1px] border-gray-400 p-[8px] hover:bg-gray-200'>Customer booked</Link>
                         <Link to='/createPlace' className='bg-gray-100 border-b-[1px] border-gray-400 p-[8px] hover:bg-gray-200'>Create your trip</Link>
                         <Link className='bg-gray-100 p-[8px] hover:bg-gray-200 rounded-b-[10px] text-red-400' onClick={handleSignOut}>Log out</Link>
                     </div>

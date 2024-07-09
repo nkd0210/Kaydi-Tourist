@@ -24,7 +24,7 @@ import { TbIroning3 } from "react-icons/tb";
 import { GiHeatHaze, GiCctvCamera, GiBarbecue, GiToaster, GiCampfire } from "react-icons/gi";
 import { AiFillCar } from "react-icons/ai";
 // REDUX STATE
-import { setListings } from '../redux/user/userSlice';
+import { setListings, setListingsStart } from '../redux/user/userSlice';
 
 const Listings = () => {
 
@@ -161,12 +161,13 @@ const Listings = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const { currentUser, listings } = useSelector((state) => state.user);
+    const { listings } = useSelector((state) => state.user);
 
     const [loading, setLoading] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState("All");
 
     const fetchListing = async () => {
+        dispatch(setListingsStart());
         const res = await fetch(
             selectedCategory !== 'All' ? `/api/listing/getlisting?category=${selectedCategory}` : `/api/listing/getlisting`,
             {
@@ -191,6 +192,8 @@ const Listings = () => {
 
     return (
         <Wrapper>
+            
+            {/* CATEGORY CHOICE */}
             <div className='py-[50px] px-[80px]'>
                 <Slider {...settings}>
                     {categories.map((category, index) => (
@@ -204,10 +207,11 @@ const Listings = () => {
                 </Slider>
             </div>
 
+            {/* LISTINGS */}
             {loading ? (<Loader />) : (
 
                 <div className='contain mx-[80px]'>
-                    {listings.map(({
+                    {listings?.map(({
                         _id,
                         creator,
                         listingPhotoPaths,
@@ -243,7 +247,7 @@ const Wrapper = styled.section`
         display: flex;
         flex-wrap: wrap;
         justify-content: flex-start;
-        gap: 20px;
+        gap: 50px;
     }
 
     @media (max-width:768px) {

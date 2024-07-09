@@ -96,10 +96,13 @@ export const deleteUser = async (req, res, next) => {
 };
 
 export const getTripList = async (req, res, next) => {
+    if(req.user.id !== req.params.userId) {
+        return res.status(400).json({ message: "You are not allowed to get trip list of this user"})
+    }
     try {
         const userId = req.params.userId;
 
-        const trip = await Booking.find({ customerId: userId }).populate("customerId hostId listingId")
+        const trip = await Booking.find({ customerId: userId }).populate("hostId listingId").sort({createdAt: -1})
 
         if (!trip) {
             return res.status(404).json({ message: "No trips found for this user" });
@@ -113,6 +116,9 @@ export const getTripList = async (req, res, next) => {
 }
 
 export const favoriteTrip = async (req, res, next) => {
+    if(req.user.id !== req.params.userId) {
+        return res.status(400).json({ message: "You are not allowed to like this trip"})
+    }
     try {
         const { userId, listingId } = req.params;
         const user = await User.findById(userId);
@@ -145,14 +151,37 @@ export const favoriteTrip = async (req, res, next) => {
 }
 
 export const propertyList = async(req,res,next) => {
+    if(req.user.id !== req.params.userId) {
+        return res.status(400).json({ message: "You are not allowed to get this property trip list of this user"})
+    }
     try {
         const userId = req.params.userId;
-        const properties = await List.find({creator: userId}).populate("creator");
+        const properties = await List.find({creator: userId}).populate("creator").sort({createdAt: -1});
         if(!properties) {
             return res.status(404).json({message: "This user dont have any property list"});
         }else {
             res.status(200).json(properties);
         }
+    } catch (error) {
+        next(error);
+    }
+}
+
+export const reservationList = async(req,res,next) => {
+    if(req.user.id !== req.params.userId) {
+        return res.status(400).json({ message: "You are not allowed to get this reservation trip list of this user"})
+    }
+    try {
+        const userId = req.params.userId;
+
+        const reservation = await Booking.find({ hostId: userId }).populate("customerId hostId listingId").sort({createdAt: -1})
+
+        if (!reservation) {
+            return res.status(404).json({ message: "No reservation trip found for this user" });
+        } else {
+            res.status(200).json(reservation);
+        }
+
     } catch (error) {
         next(error);
     }

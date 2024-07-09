@@ -26,10 +26,10 @@ const ListingCard = ({ listingId, creator, listingPhotoPaths, city, province, co
         slidesToScroll: 1
     };
 
-    const { currentUser } = useSelector((state) => state.user);
     const navigate = useNavigate();
     const dispatch = useDispatch();
-
+    
+    const { currentUser } = useSelector((state) => state.user);
     const wishList = currentUser?.wishList || [];
     const isLiked = wishList?.find((item) => item?._id === listingId);
 
@@ -50,7 +50,8 @@ const ListingCard = ({ listingId, creator, listingPhotoPaths, city, province, co
             });
             const data = await res.json();
             if (!res.ok) {
-                console.log(data.message)
+                console.log(data.message);
+                return;
             } else {
                 dispatch(setWishList(data.wishList));
             }
@@ -66,12 +67,12 @@ const ListingCard = ({ listingId, creator, listingPhotoPaths, city, province, co
         <Wrapper>
             <ToastContainer />
             {currentUser ? (
-                <div onClick={() => { navigate(`/detailplace/${listingId}`) }} className='relative mb-[100px]'>
+                <div onClick={() => { navigate(`/detailplace/${listingId}`) }} className='relative mb-[100px] w-[350px] h-[350px] overflow-x-hidden border rounded-[10px] shadow-lg '>
                     {/* IMAGE */}
-                    <div className=' w-[300px] h-[200px]'>
+                    <div className=' w-[350px] h-[200px]'>
                         <Slider {...settings}>
                             {listingPhotoPaths.map((photo, index) => (
-                                <div key={index} className='w-[300px] h-[200px]'>
+                                <div key={index} className='w-[350px] h-[200px]'>
                                     <img src={photo} alt="" className='w-full h-full object-cover' />
                                 </div>
                             ))}
@@ -86,15 +87,28 @@ const ListingCard = ({ listingId, creator, listingPhotoPaths, city, province, co
                     </button>
 
                     {/* INFORMATION */}
-                    <h3 className='text-[16px] font-semibold'>
-                        {city}, {province}, {country}
-                    </h3>
+                    <div className='p-[10px]'>
+                        <div className='flex gap-[5px] mb-[2px]'>
+                            <span className='font-semibold'>Location: </span>
+                            <h3>
+                                {city}, {province}, {country}
+                            </h3>
+                        </div>
 
-                    <p className='text-[16px] '>{category}</p>
-                    <div>
-                        <p>{type}</p>
-                        <p><span className='font-semibold'>${price} </span>per night</p>
+                        <div className='flex gap-[5px] mb-[2px]'>
+                            <span className='font-semibold'>Category: </span>
+                            <p className='text-[16px] '>{category}</p>
+                        </div>
+                        <div className='flex gap-[5px] mb-[2px]'>
+                            <span className='font-semibold'>Type: </span>
+                            <p>{type}</p>
+                        </div>
+                        <div className='flex gap-[5px]'>
+                            <span className='font-semibold'>Cost: </span>
+                            <p>${price} / night</p>
+                        </div>
                     </div>
+
 
                 </div>
 

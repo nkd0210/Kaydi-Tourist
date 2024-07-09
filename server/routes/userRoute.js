@@ -6,7 +6,8 @@ import {
   updateUser,
   getTripList,
   favoriteTrip,
-  propertyList
+  propertyList,
+  reservationList
 } from "../controllers/userController.js";
 import { verifyToken } from "../utils/verifyUser.js";
 
@@ -19,5 +20,6 @@ router.delete("/deleteuser/:userId", verifyToken, deleteUser);
 router.get('/trip/:userId', verifyToken, getTripList); // all trip that the user booked
 router.put('/trip/:userId/:listingId', verifyToken, favoriteTrip); // all trip that the user liked
 router.get('/property/:userId', verifyToken, propertyList); // all trip that the user created
+router.get('/reservation/:userId', verifyToken, reservationList); // all of your trip that the customer booked
 
 export default router;

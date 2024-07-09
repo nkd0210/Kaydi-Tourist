@@ -53,8 +53,16 @@ const userSlice = createSlice({
     deleteUserFailure: (state, action) => {
       state.error = action.payload;
     },
+    setListingsStart: (state, action) => {
+      state.listings = null;
+      state.error = null;
+    },
     setListings: (state, action) => {
       state.listings = action.payload;
+      state.error = null;
+    },
+    setTripListStart: (state, action) => {
+      state.currentUser.tripList = null;
       state.error = null;
     },
     setTripList: (state, action) => {
@@ -65,8 +73,16 @@ const userSlice = createSlice({
       state.currentUser.wishList = action.payload;
       state.error = null;
     },
+    setPropertyListStart: (state, action) => {
+      state.currentUser.propertyList = null;
+      state.error = null;
+    },
     setPropertyList: (state, action) => {
       state.currentUser.propertyList = action.payload;
+      state.error = null;
+    },
+    setReservationListStart: (state, action) => {
+      state.currentUser.reservationList = null;
       state.error = null;
     },
     setReservationList: (state, action) => {
@@ -90,10 +106,14 @@ export const {
   deleteUserStart,
   deleteUserSuccess,
   deleteUserFailure,
+  setListingsStart,
   setListings,
   setWishList,
+  setTripListStart,
   setTripList,
+  setPropertyListStart,
   setPropertyList,
+  setReservationListStart,
   setReservationList,
 } = userSlice.actions;
 

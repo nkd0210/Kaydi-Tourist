@@ -221,6 +221,10 @@ const ListingDetail = () => {
 
     const handleSubmitBookingForm = async (e) => {
         e.preventDefault();
+        if(dayCount === 0) {
+            handleShowErrorMessage("Select a valid date range");
+            return;
+        }
         try {
             const res = await fetch(`/api/booking/createbooking`, {
                 method: "POST",
