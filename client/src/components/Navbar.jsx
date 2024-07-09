@@ -83,8 +83,8 @@ const Navbar = () => {
 
                 {dropdownMenu && !currentUser && (
                     <div className='absolute right-[20px] max-md:right-[10px] top-[80px] max-md:top-[80px]  w-[100px]  border shadow-lg rounded-[10px] flex flex-col z-20'>
-                        <Link to='signin' className='bg-gray-100 border-b-[1px] border-gray-400 hover:bg-gray-200 rounded-t-[10px]'>Sign In</Link>
-                        <Link to='signup' className='bg-gray-100 hover:bg-gray-200 rounded-b-[10px]'>Sign Up</Link>
+                        <Link to='signin' className='bg-gray-100 border-b-[1px] border-gray-400 hover:bg-gray-200 rounded-t-[10px] py-[5px]'>Sign In</Link>
+                        <Link to='signup' className='bg-gray-100 hover:bg-gray-200 rounded-b-[10px] py-[5px]'>Sign Up</Link>
                     </div>
                 )}
 

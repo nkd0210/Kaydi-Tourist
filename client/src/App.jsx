@@ -10,6 +10,7 @@ import Trip from './pages/TripList'
 import WishList from './pages/WishList'
 import PropertyList from './pages/PropertyList'
 import ReservationList from './pages/ReservationList';
+import Statistic from './pages/Statistic';
 
 function App() {
 
@@ -26,6 +27,7 @@ function App() {
         <Route path='/wishlist/:userId' element={<WishList />} />
         <Route path='/propertylist/:userId' element={<PropertyList />} />
         <Route path='/reservationlist/:userId' element={<ReservationList />} />
+        <Route path='/statistic/:tripId' element={<Statistic />} />
       </Routes>
     </BrowserRouter>
   )
