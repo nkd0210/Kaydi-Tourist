@@ -2,10 +2,9 @@ import React, { useState, useEffect } from 'react'
 
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+// TOAST
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-
 // ICON
 import { TfiEmail } from "react-icons/tfi";
 import { RiLockPasswordLine } from "react-icons/ri";
@@ -165,7 +164,7 @@ const SignIn = () => {
           </div>
         </div>
       </div>
-      
+
     </div>
   )
 }

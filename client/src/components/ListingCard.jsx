@@ -28,7 +28,7 @@ const ListingCard = ({ listingId, creator, listingPhotoPaths, city, province, co
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    
+
     const { currentUser } = useSelector((state) => state.user);
     const wishList = currentUser?.wishList || [];
     const isLiked = wishList?.find((item) => item?._id === listingId);
@@ -67,12 +67,12 @@ const ListingCard = ({ listingId, creator, listingPhotoPaths, city, province, co
         <Wrapper>
             <ToastContainer />
             {currentUser ? (
-                <div onClick={() => { navigate(`/detailplace/${listingId}`) }} className='relative mb-[100px] w-[350px] h-[350px] overflow-x-hidden border rounded-[10px] shadow-lg '>
+                <div onClick={() => { navigate(`/detailplace/${listingId}`) }} className='relative mb-[100px] w-[400px] h-[350px] overflow-x-hidden border rounded-[10px] shadow-lg '>
                     {/* IMAGE */}
-                    <div className=' w-[350px] h-[200px]'>
+                    <div className=' w-[400px] h-[200px]'>
                         <Slider {...settings}>
                             {listingPhotoPaths.map((photo, index) => (
-                                <div key={index} className='w-[350px] h-[200px]'>
+                                <div key={index} className='w-[400px] h-[200px]'>
                                     <img src={photo} alt="" className='w-full h-full object-cover' />
                                 </div>
                             ))}

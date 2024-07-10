@@ -441,7 +441,7 @@ const UpdateList = () => {
             streetAddress: formLocation.streetAddress || defaultTrip.streetAddress,
             aptSuite: formLocation.aptSuite || defaultTrip.aptSuite,
             city: formLocation.city || defaultTrip.city,
-            province: formLocation.province || defaultTrip.city,
+            province: formLocation.province || defaultTrip.province,
             country: formLocation.country || defaultTrip.country,
             guestCount: defaultTrip.guestCount || guestCount,
             bedroomCount: defaultTrip.bedroomCount || bedroomCount,

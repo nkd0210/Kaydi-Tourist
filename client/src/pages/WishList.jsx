@@ -18,10 +18,10 @@ const WishList = () => {
     return (
         <div>
             <Navbar />
-            <div className='mx-[100px] max-md:mx-0 my-[50px] max-md:my-[20px]'>
+            <div className='mx-[100px] max-md:mx-[10px] my-[50px] max-md:my-[20px]'>
                 <h2 className='text-center text-[30px] font-semibold mb-[50px]'>Your Favorite Trip</h2>
                 <div className='flex flex-wrap gap-[50px]'>
-                    {wishList.map(({ _id, creator,listingPhotoPaths, city, province, country, category, type, price, booking = false }) => (
+                    {wishList.map(({ _id, creator, listingPhotoPaths, city, province, country, category, type, price, booking = false }) => (
                         <ListingCard
                             key={_id}
                             listingId={_id}

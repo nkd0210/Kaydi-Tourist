@@ -15,7 +15,7 @@ const Navbar = () => {
 
     const { currentUser } = useSelector((state) => state.user);
 
-    const [search, setSearch] = useState("")
+    const [searchKeyWord, setSearchKeyWord] = useState("")
     const [dropdownMenu, setDropdownMenu] = useState(false);
 
     const handleSignOut = async (e) => {
@@ -49,12 +49,12 @@ const Navbar = () => {
                 <input
                     type="text"
                     placeholder="Search ..."
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
+                    value={searchKeyWord}
+                    onChange={(e) => setSearchKeyWord(e.target.value)}
                     className='outline-none'
                 />
 
-                <IconButton>
+                <IconButton onClick={() => navigate(`/search/${searchKeyWord}`)}>
                     <Search sx={{}} />
                 </IconButton>
 

@@ -55,7 +55,7 @@ const PropertyList = () => {
     return (
         <div>
             <Navbar />
-            <div className='mx-[100px] max-md:mx-0 my-[50px] max-md:my-[20px]'>
+            <div className='mx-[100px] max-md:mx-[10px] my-[50px] max-md:my-[20px]'>
                 <h2 className='text-center text-[30px] font-semibold mb-[50px]'>Your Upload Trip</h2>
                 <div className='flex flex-wrap gap-[50px]'>
                     {propertyList.map((trip, index) => (

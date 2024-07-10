@@ -12,6 +12,7 @@ import PropertyList from './pages/PropertyList'
 import ReservationList from './pages/ReservationList';
 import Statistic from './pages/Statistic';
 import UpdateList from './pages/UpdateList';
+import SearchPage from './pages/SearchPage';
 
 function App() {
 
@@ -30,6 +31,7 @@ function App() {
         <Route path='/reservationlist/:userId' element={<ReservationList />} />
         <Route path='/statistic/:tripId' element={<Statistic />} />
         <Route path='/update/:tripId' element={<UpdateList />} />
+        <Route path='/search/:searchKeyWord' element={<SearchPage />} />
       </Routes>
     </BrowserRouter>
   )
