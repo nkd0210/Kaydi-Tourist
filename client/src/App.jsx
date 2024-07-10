@@ -11,6 +11,7 @@ import WishList from './pages/WishList'
 import PropertyList from './pages/PropertyList'
 import ReservationList from './pages/ReservationList';
 import Statistic from './pages/Statistic';
+import UpdateList from './pages/UpdateList';
 
 function App() {
 
@@ -28,6 +29,7 @@ function App() {
         <Route path='/propertylist/:userId' element={<PropertyList />} />
         <Route path='/reservationlist/:userId' element={<ReservationList />} />
         <Route path='/statistic/:tripId' element={<Statistic />} />
+        <Route path='/update/:tripId' element={<UpdateList />} />
       </Routes>
     </BrowserRouter>
   )

@@ -95,7 +95,7 @@ const PropertyList = () => {
                                     </div>
                                 </div>
 
-                                <button type='button' disabled={!currentUser} onClick={(e) => { e.stopPropagation(); }} className='border w-[120px] rounded-[10px] p-[10px] my-[10px] ml-[10px] text-center bg-red-400 hover:opacity-70 hover:text-white'>
+                                <button type='button' disabled={!currentUser} onClick={(e) => { e.stopPropagation(); navigate(`/update/${trip._id}`) }} className='border w-[120px] rounded-[10px] p-[10px] my-[10px] ml-[10px] text-center bg-red-400 hover:opacity-70 hover:text-white'>
                                     Update trip
                                 </button>
                                 <button type='button' disabled={!currentUser} onClick={(e) => { e.stopPropagation(); navigate(`/statistic/${trip._id}`) }} className='border w-[120px] rounded-[10px] p-[10px] my-[10px] ml-[10px] text-center bg-blue-400 hover:opacity-70 hover:text-white'>

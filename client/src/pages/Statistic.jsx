@@ -26,6 +26,7 @@ const Statistic = () => {
     const [bookedTrips, setBookedTrips] = useState([]);
     const [availableTrip, setAvailableTrip] = useState(false);
     const [loading, setLoading] = useState(true); // Add loading state
+    const [totalRevenue, setTotalRevenue] = useState(0);
 
     const fetchSingleBookedTrip = async () => {
         try {
@@ -38,7 +39,7 @@ const Statistic = () => {
                 setAvailableTrip(true);
             }
         } catch (error) {
-            console.log("Fetching single booked trip failed", error.message)
+            console.log("Fetching single booked trip failed !", error.message)
         } finally {
             setLoading(false); // Set loading to false after fetch is complete
         }
@@ -46,7 +47,22 @@ const Statistic = () => {
 
     useEffect(() => {
         fetchSingleBookedTrip();
-    }, []);
+    }, [currentUser]);
+
+    useEffect(() => {
+        if(bookedTrips && bookedTrips.eachTripBooking) {
+            countTotalRevenue();
+        }
+    }, [bookedTrips])
+
+
+    const countTotalRevenue = () => {
+        let totalPrice = 0;
+        bookedTrips.eachTripBooking.forEach((trip) => {
+            totalPrice += trip.totalPrice;
+        })
+        setTotalRevenue(totalPrice);
+    }
 
     const formatDate = (isoDate) => {
         const date = new Date(isoDate);
@@ -56,10 +72,11 @@ const Statistic = () => {
         return `${month}/${day}/${year}`;
     }
 
+
     return (
         <div>
             <Navbar />
-            <div className='mx-[100px] max-md:mx-0 my-[50px] max-md:my-[20px]'>
+            <div className='mx-[100px] max-md:mx-[10px] my-[50px] max-md:my-[20px]'>
                 <h2 className='text-center text-[30px] font-semibold mb-[50px]'>Statistic</h2>
                 <div>
                     {loading ? (
@@ -73,20 +90,34 @@ const Statistic = () => {
 
                         <div className='flex flex-col gap-[20px]'>
 
-                            <div className='flex gap-[20px]'>
-                                <h3 className='font-semibold'>Location: </h3>
+                            <div className='flex w-[400px] gap-[20px] border rounded-[10px] p-[10px] shadow-lg'>
+                                <h3 className='font-semibold '>Location: </h3>
                                 <span >{bookedTrips.eachTripBooking[0]?.listingId?.title}</span>
                             </div>
+                            <div className='flex max-md:flex-col gap-[20px]'>
+                                <div className='flex gap-[10px] border rounded-[10px] p-[10px] shadow-lg'>
+                                    <h3 className='font-semibold'>Today booked: </h3>
+                                    <span >{bookedTrips.todayBook}</span>
+                                </div>
+                                <div className='flex gap-[10px] border rounded-[10px] p-[10px] shadow-lg'>
+                                    <h3 className='font-semibold'>Yesterday booked: </h3>
+                                    <span >{bookedTrips.yesterdayBooked}</span>
+                                </div>
+                                <div className='flex gap-[10px] border rounded-[10px] p-[10px] shadow-lg'>
+                                    <h3 className='font-semibold'>Last week booked: </h3>
+                                    <span >{bookedTrips.lastWeekBooked}</span>
+                                </div>
 
-                            <div className='flex gap-[20px]'>
-                                <h3 className='font-semibold'>Last week booked: </h3>
-                                <span >{bookedTrips.lastWeekBooked}</span>
+                                <div className='flex gap-[10px] border rounded-[10px] p-[10px] shadow-lg'>
+                                    <h3 className='font-semibold'>Last month booked: </h3>
+                                    <span >{bookedTrips.lastMonthBooked}</span>
+                                </div>
+                            </div>
+                            <div className='flex w-[400px] gap-[20px] border rounded-[10px] p-[10px] shadow-lg mb-[20px]'>
+                                <h3 className='font-semibold '>Total revenue: </h3>
+                                <span> ${totalRevenue}</span>
                             </div>
 
-                            <div className='flex gap-[20px]'>
-                                <h3 className='font-semibold'>Last month booked: </h3>
-                                <span >{bookedTrips.lastMonthBooked}</span>
-                            </div>
 
                             <div className='chart flex flex-wrap gap-[50px]'>
                                 {/* BAR CHART */}

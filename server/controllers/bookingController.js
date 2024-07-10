@@ -60,10 +60,26 @@ export const getEachBooking = async (req, res, next) => {
       now.getMonth(),
       now.getDate() - 7
     );
+    const oneDayAgo = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate() - 1
+    );
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
     const eachTripBooking = await Booking.find({ listingId: tripId }).populate(
       "listingId customerId"
     );
+
+    const todayBooking = await Booking.find({
+      listingId: tripId,
+      createdAt: { $gte: today },
+    });
+
+    const lastDayBooking = await Booking.find({
+      listingId: tripId,
+      createdAt: { $gte: oneDayAgo },
+    });
 
     const lastWeekBooking = await Booking.find({
       listingId: tripId,
@@ -78,13 +94,13 @@ export const getEachBooking = async (req, res, next) => {
     if (eachTripBooking.length === 0) {
       return res.status(400).json({ message: "No one have book this trip !" });
     } else {
-      res
-        .status(200)
-        .json({
-          eachTripBooking,
-          lastMonthBooked: lastMonthBooking.length,
-          lastWeekBooked: lastWeekBooking.length,
-        });
+      res.status(200).json({
+        eachTripBooking,
+        lastMonthBooked: lastMonthBooking.length,
+        lastWeekBooked: lastWeekBooking.length,
+        yesterdayBooked: lastDayBooking.length,
+        todayBook: todayBooking.length
+      });
     }
   } catch (error) {
     next(error);

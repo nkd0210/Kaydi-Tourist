@@ -2,7 +2,6 @@ import User from "../models/userModel.js";
 import Listing from "../models/listingModel.js";
 
 export const createListing = async (req, res, next) => {
-
     const newListing = new Listing({
         userId: req.user.id,
         creator: req.body.creator,
@@ -28,10 +27,9 @@ export const createListing = async (req, res, next) => {
 
     try {
         const savedListing = await newListing.save();
-        res.status(200).json(savedListing)
-
+        res.status(200).json(savedListing);
     } catch (error) {
-        res.status(400).json({ message: "Failed to create a new listing place" })
+        res.status(400).json({ message: "Failed to create a new listing place" });
         next(error);
     }
 };
@@ -51,19 +49,19 @@ export const getAllListing = async (req, res, next) => {
         now.getFullYear(),
         now.getMonth() - 1,
         now.getDate()
-    )
+    );
 
     const lastMonthListings = await Listing.countDocuments({
-        createdAt: { $gte: oneMonthAgo }
-    })
+        createdAt: { $gte: oneMonthAgo },
+    });
 
     res.status(200).json({
         message: "Get all listings successfully",
         totalListing,
         lastMonthListings,
-        listing
-    })
-}
+        listing,
+    });
+};
 
 export const getListing = async (req, res, next) => {
     const qCategory = req.query.category;
@@ -71,7 +69,9 @@ export const getListing = async (req, res, next) => {
     try {
         let listings;
         if (qCategory) {
-            listings = await Listing.find({ category: qCategory }).populate("creator");
+            listings = await Listing.find({ category: qCategory }).populate(
+                "creator"
+            );
         } else {
             listings = await Listing.find().populate("creator");
         }
@@ -80,12 +80,54 @@ export const getListing = async (req, res, next) => {
     } catch (error) {
         next(error);
     }
-}
+};
 
-export const getDetailListing = async (req,res,next) => {
-    const findListing = await Listing.findById(req.params.listingId).populate("creator");
+export const getDetailListing = async (req, res, next) => {
+    const findListing = await Listing.findById(req.params.listingId).populate(
+        "creator"
+    );
     if (!findListing) {
         return res.status(404).json({ message: "Listing not found" });
     }
     res.status(200).json(findListing);
-}
+};
+
+export const updateListing = async (req, res, next) => {
+    if (req.user.id !== req.params.userId) {
+        return res
+            .status(400)
+            .json({ message: "You do not have permission to update listing" });
+    }
+    try {
+        const updatedListing = await Listing.findByIdAndUpdate(
+            req.params.listingId,
+            {
+                $set: {
+                    category: req.body.category,
+                    type: req.body.type,
+                    streetAddress: req.body.streetAddress,
+                    aptSuite: req.body.aptSuite,
+                    city: req.body.city,
+                    province: req.body.province,
+                    country: req.body.country,
+                    guestCount: req.body.guestCount,
+                    bedroomCount: req.body.bedroomCount,
+                    bedCount: req.body.bedCount,
+                    bathroomCount: req.body.bathroomCount,
+                    amenities: req.body.amenities,
+                    title: req.body.title,
+                    description: req.body.description,
+                    highlight: req.body.highlight,
+                    highlightDesc: req.body.highlightDesc,
+                    price: req.body.price,
+                    listingPhotoPaths: req.body.listingPhotoPaths,
+                },
+            },
+            { new: true } // return the update document
+        );
+        res.status(200).json(updatedListing)
+
+    } catch (error) {
+        next(error);
+    }
+};

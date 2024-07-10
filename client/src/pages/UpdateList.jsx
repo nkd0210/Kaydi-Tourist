@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-
+import { useParams } from 'react-router-dom';
 // IMAGE UPLOAD
 import { app } from '../firebase';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
@@ -29,7 +29,7 @@ import { CiCircleMinus } from "react-icons/ci";
 import { IoIosImages } from 'react-icons/io';
 import { MdAttachMoney } from "react-icons/md";
 
-const CreatePlace = () => {
+const UpdateList = () => {
 
     const categories = [
         {
@@ -259,9 +259,18 @@ const CreatePlace = () => {
         }
     ];
 
+    // INITIAL STATE
+    const [category, setCategory] = useState('');
+    const [type, setType] = useState('');
 
-    // HANDLE UPLOAD IMAGE
-    const fileRef = useRef(null);
+    const [formLocation, setFormLocation] = useState([]);
+
+    const [guestCount, setGuestCount] = useState(1);
+    const [bedroomCount, setBedroomCount] = useState(1);
+    const [bedCount, setBedCount] = useState(1);
+    const [bathroomCount, setBathroomCount] = useState(1);
+
+    const [amenities, setAmenities] = useState([]);
 
     const [photos, setPhotos] = useState([]);
     const [formDataImage, setFormDataImage] = useState([]);
@@ -269,6 +278,39 @@ const CreatePlace = () => {
 
     const [imageFileUploadProgress, setImageFileUploadProgress] = useState(null);
     const [imageFileUploadError, setImageFileUploadError] = useState(null);
+
+    const [describeForm, setDescribeForm] = useState([]);
+
+    // HANDLE FETCH PREVIOUS TRIP BEFORE UPDATE
+    const { tripId } = useParams();
+    const [defaultTrip, setDefaultTrip] = useState([]);
+    const fetchDefaultListing = async () => {
+        try {
+            const res = await fetch(`/api/listing/getdetailplace/${tripId}`, {
+                method: "GET"
+            });
+            const data = await res.json();
+            if (res.ok) {
+                setDefaultTrip(data);
+            }
+        } catch (error) {
+            console.log("Fetching default listing failed", error.message);
+        }
+    }
+
+    useEffect(() => {
+        fetchDefaultListing();
+    }, [])
+
+    useEffect(() => {
+        setCategory(defaultTrip.category);
+        setType(defaultTrip.type);
+        setAmenities(defaultTrip.amenities);
+        setPhotos(defaultTrip.listingPhotoPaths);
+    }, [defaultTrip])
+
+    // HANDLE UPLOAD IMAGE
+    const fileRef = useRef(null);
 
     const handleUploadPhotos = (e) => {
         const newPhoto = e.target.files;
@@ -338,18 +380,10 @@ const CreatePlace = () => {
     }
 
     // HANDLE FORM SUBMISSION STEP 1
-    const [category, setCategory] = useState('');
-    const [type, setType] = useState('');
-    const [formLocation, setFormLocation] = useState([]);
 
     const handleChangeFormLocation = (e) => {
         setFormLocation({ ...formLocation, [e.target.id]: e.target.value })
     }
-
-    const [guestCount, setGuestCount] = useState(1);
-    const [bedroomCount, setBedroomCount] = useState(1);
-    const [bedCount, setBedCount] = useState(1);
-    const [bathroomCount, setBathroomCount] = useState(1);
 
     const handleDecreaseGuestCount = () => {
         if (guestCount > 1) {
@@ -376,7 +410,6 @@ const CreatePlace = () => {
     }
 
     // HANDLE FORM SUBMISSION STEP 2
-    const [amenities, setAmenities] = useState([]);
 
     const handleSelectAmenities = (facility) => {
         if (amenities.includes(facility)) {
@@ -386,7 +419,6 @@ const CreatePlace = () => {
         }
     }
 
-    const [describeForm, setDescribeForm] = useState([]);
 
     const handleChangeDescribeForm = (e) => {
         setDescribeForm({ ...describeForm, [e.target.id]: e.target.value })
@@ -404,31 +436,29 @@ const CreatePlace = () => {
     const handleSubmitForm = async (e) => {
         e.preventDefault();
         const listingForm = {
-            creator: currentUser._id,
             category,
             type,
-            streetAddress: formLocation.streetAddress,
-            aptSuite: formLocation.aptSuite,
-            city: formLocation.city,
-            province: formLocation.province,
-            country: formLocation.country,
-            guestCount,
-            bedroomCount,
-            bedCount,
-            bathroomCount,
+            streetAddress: formLocation.streetAddress || defaultTrip.streetAddress,
+            aptSuite: formLocation.aptSuite || defaultTrip.aptSuite,
+            city: formLocation.city || defaultTrip.city,
+            province: formLocation.province || defaultTrip.city,
+            country: formLocation.country || defaultTrip.country,
+            guestCount: defaultTrip.guestCount || guestCount,
+            bedroomCount: defaultTrip.bedroomCount || bedroomCount,
+            bedCount: defaultTrip.bedCount || bedCount,
+            bathroomCount: defaultTrip.bathroomCount || bathroomCount,
             amenities,
-            title: describeForm.title,
-            description: describeForm.description,
-            highlight: describeForm.highlight,
-            highlightDesc: describeForm.highlightDesc,
-            price: describeForm.price,
-            listingPhotoPaths: formDataImage.listingPhotoPaths
+            title: describeForm.title || defaultTrip.title,
+            description: describeForm.description || defaultTrip.description,
+            highlight: describeForm.highlight || defaultTrip.highlight,
+            highlightDesc: describeForm.highlightDesc || defaultTrip.highlightDesc,
+            price: describeForm.price || defaultTrip.price,
+            listingPhotoPaths: formDataImage.listingPhotoPaths || defaultTrip.listingPhotoPaths
         };
 
         try {
-
-            const res = await fetch(`/api/listing/createlisting`, {
-                method: "POST",
+            const res = await fetch(`/api/listing/updatelisting/${currentUser._id}/${tripId}`, {
+                method: "PUT",
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -436,24 +466,14 @@ const CreatePlace = () => {
             });
             const data = await res.json();
             if (!res.ok) {
-                handleShowErrorMessage(data.message);
+                handleShowErrorMessage("Failed to update place information")
                 return;
             } else {
-                navigate('/');
+                navigate(`/propertylist/${currentUser._id}`)
             }
-        } catch (error) {
-            console.log(error.message);
-        }
-    }
-
-    // FETCH LISTING
-    const fetchListing = async () => {
-        try {
-            const res = await fetch(`/api/listing/getlisting`);
-            const data = await res.json();
 
         } catch (error) {
-            console.log(error.message)
+            console.log("Update place information failed: ", error.message)
         }
     }
 
@@ -462,7 +482,7 @@ const CreatePlace = () => {
             <Navbar />
             <ToastContainer />
             <div className='p-[20px] max-md:p-0 bg-gray-50'>
-                <h1 className='text-slate-500 font-bold text-[24px] m-[20px]'>Public Your Place</h1>
+                <h1 className='text-slate-500 font-bold text-[24px] m-[20px]'>Update Your Place</h1>
                 <form onSubmit={handleSubmitForm} className='bg-white p-[20px] flex flex-col gap-[40px]'>
 
                     {/* STEP 1 */}
@@ -507,26 +527,26 @@ const CreatePlace = () => {
                             <span className='text-[18px] font-semibold'>Where's your place located ?</span>
                             <div className='my-[20px]'>
                                 <div className='mb-[10px]'>Street Address</div>
-                                <input onChange={handleChangeFormLocation} id='streetAddress' className='w-[250px] outline-none border rounded-[10px] p-[10px]' type="text" placeholder='Street Address' />
+                                <input onChange={handleChangeFormLocation} defaultValue={defaultTrip.streetAddress} id='streetAddress' className='w-[250px] outline-none border rounded-[10px] p-[10px]' type="text" placeholder='Street Address' />
                             </div>
                             <div className='flex max-md:flex-col gap-[50px] max-md:gap-[20px] my-[20px]'>
                                 <div>
                                     <div className='mb-[10px]'>Apartment, Suite, etc. (if applicable)</div>
-                                    <input onChange={handleChangeFormLocation} id='aptSuite' className='w-[250px] outline-none border rounded-[10px] p-[10px]' type="text" placeholder='Apt, Suite, etc' />
+                                    <input onChange={handleChangeFormLocation} defaultValue={defaultTrip.aptSuite} id='aptSuite' className='w-[250px] outline-none border rounded-[10px] p-[10px]' type="text" placeholder='Apt, Suite, etc' />
                                 </div>
                                 <div>
                                     <div className='mb-[10px]'>City</div>
-                                    <input onChange={handleChangeFormLocation} id='city' className='w-[250px] outline-none border rounded-[10px] p-[10px]' type="text" placeholder='City' />
+                                    <input onChange={handleChangeFormLocation} defaultValue={defaultTrip.city} id='city' className='w-[250px] outline-none border rounded-[10px] p-[10px]' type="text" placeholder='City' />
                                 </div>
                             </div>
                             <div className='flex max-md:flex-col gap-[50px] max-md:gap-[20px] my-[20px]'>
                                 <div>
                                     <div className='mb-[10px]'>Province</div>
-                                    <input onChange={handleChangeFormLocation} id='province' className='w-[250px] outline-none border rounded-[10px] p-[10px]' type="text" placeholder='Province' />
+                                    <input onChange={handleChangeFormLocation} defaultValue={defaultTrip.province} id='province' className='w-[250px] outline-none border rounded-[10px] p-[10px]' type="text" placeholder='Province' />
                                 </div>
                                 <div>
                                     <div className='mb-[10px]'>Country</div>
-                                    <input onChange={handleChangeFormLocation} id='country' className='w-[250px] outline-none border rounded-[10px] p-[10px]' type="text" placeholder='Country' />
+                                    <input onChange={handleChangeFormLocation} defaultValue={defaultTrip.country} id='country' className='w-[250px] outline-none border rounded-[10px] p-[10px]' type="text" placeholder='Country' />
                                 </div>
                             </div>
                         </div>
@@ -538,7 +558,7 @@ const CreatePlace = () => {
                                     <p>Guest</p>
                                     <div className='flex justify-center items-center text-center'>
                                         <CiCircleMinus className='cursor-pointer text-[20px]' onClick={handleDecreaseGuestCount} />
-                                        <p className='px-[10px] text-[18px]'>{guestCount}</p>
+                                        <p className='px-[10px] text-[18px]'>{defaultTrip.guestCount}</p>
                                         <CiCirclePlus className='cursor-pointer text-[20px]' onClick={() => setGuestCount(guestCount + 1)} />
                                     </div>
                                 </div>
@@ -546,7 +566,7 @@ const CreatePlace = () => {
                                     <p>Bedroom</p>
                                     <div className='flex justify-center items-center text-center'>
                                         <CiCircleMinus className='cursor-pointer text-[20px]' onClick={handleDecreaseBedRoomCount} />
-                                        <p className='px-[10px] text-[18px]'>{bedroomCount}</p>
+                                        <p className='px-[10px] text-[18px]'>{defaultTrip.bedroomCount}</p>
                                         <CiCirclePlus className='cursor-pointer text-[20px]' onClick={() => setBedroomCount(bedroomCount + 1)} />
                                     </div>
                                 </div>
@@ -554,7 +574,7 @@ const CreatePlace = () => {
                                     <p>Bed</p>
                                     <div className='flex justify-center items-center text-center'>
                                         <CiCircleMinus onClick={handleDecreaseBedCount} className=' cursor-pointer text-[20px]' />
-                                        <p className='px-[10px] text-[18px]'>{bedCount}</p>
+                                        <p className='px-[10px] text-[18px]'>{defaultTrip.bedCount}</p>
                                         <CiCirclePlus onClick={() => setBedCount(bedCount + 1)} className='cursor-pointer text-[20px]' />
                                     </div>
                                 </div>
@@ -562,7 +582,7 @@ const CreatePlace = () => {
                                     <p>Bathroom</p>
                                     <div className='flex justify-center items-center text-center'>
                                         <CiCircleMinus onClick={handleDecreaseBathroomCount} className='cursor-pointer text-[20px]' />
-                                        <p className='px-[10px] text-[18px]'>{bathroomCount}</p>
+                                        <p className='px-[10px] text-[18px]'>{defaultTrip.bathroomCount}</p>
                                         <CiCirclePlus onClick={() => setBathroomCount(bathroomCount + 1)} className='cursor-pointer text-[20px]' />
                                     </div>
                                 </div>
@@ -581,7 +601,7 @@ const CreatePlace = () => {
                                     <div
                                         onClick={() => handleSelectAmenities(item.name)}
                                         key={index}
-                                        className={`${amenities.includes(item.name) ? 'border-red-500 bg-red-100 shadow-lg' : ''} border rounded-[10px] p-[10px] flex flex-col justify-center items-center text-center cursor-pointer`}
+                                        className={`${amenities?.includes(item.name) ? 'border-red-500 bg-red-100 shadow-lg' : ''} border rounded-[10px] p-[10px] flex flex-col justify-center items-center text-center cursor-pointer`}
                                     >
                                         <div>{item.icon}</div>
                                         <p>{item.name}</p>
@@ -595,7 +615,7 @@ const CreatePlace = () => {
 
                             <div className='gap-[20px] py-[20px]' ref={fileRef}>
 
-                                {photos.length < 1 && (
+                                {photos && photos.length < 1 && (
                                     <>
                                         <input
                                             id="image"
@@ -614,14 +634,14 @@ const CreatePlace = () => {
                                     </>
                                 )}
 
-                                {photos.length >= 1 && (
+                                {photos && photos.length >= 1 && (
                                     <div className='flex flex-col'>
                                         {/* PHOTOS */}
                                         <div className='flex border overflow-x-scroll gap-[20px] rounded-[10px]'>
-                                            {photos.map((photo, index) => (
+                                            {photos?.map((photo, index) => (
                                                 <div key={index} className='relative w-[150px] h-[150px]'>
                                                     <div className='w-[150px] h-[150px]'>
-                                                        <img src={URL.createObjectURL(photo)} alt="picture" className='w-full h-full obejct-cover rounded-[10px]' />
+                                                        <img src={`${photo} ? photo : URL.createObjectURL(photo)`} alt="picture" className='w-full h-full obejct-cover rounded-[10px]' />
                                                     </div>
                                                     <div onClick={() => handleRemovePhoto(index)} className='absolute top-[5px] right-[5px] text-black cursor-pointer hover:text-red-400'><BiTrash /></div>
                                                 </div>
@@ -664,25 +684,25 @@ const CreatePlace = () => {
                             <span className='my-[20px] text-[18px] font-semibold'>What make your place attractive and exciting ?</span>
                             <div className='my-[20px]'>
                                 <div className='mb-[10px]'>Title</div>
-                                <input onChange={handleChangeDescribeForm} id='title' className='w-[400px] outline-none border rounded-[10px] p-[10px]' type="text" placeholder='Title' />
+                                <input defaultValue={defaultTrip.title} onChange={handleChangeDescribeForm} id='title' className='w-[400px] outline-none border rounded-[10px] p-[10px]' type="text" placeholder='Title' />
                             </div>
                             <div className='my-[20px]'>
                                 <div className='mb-[10px]'>Description</div>
-                                <textarea onChange={handleChangeDescribeForm} id='description' className='w-[400px] outline-none border rounded-[10px] p-[10px]' type="text" placeholder='Description' />
+                                <textarea defaultValue={defaultTrip.description} onChange={handleChangeDescribeForm} id='description' className='w-[400px] outline-none border rounded-[10px] p-[10px]' type="text" placeholder='Description' />
                             </div>
                             <div className='my-[20px]'>
                                 <div className='mb-[10px]'>Highlight</div>
-                                <input onChange={handleChangeDescribeForm} id='highlight' className='w-[400px] outline-none border rounded-[10px] p-[10px]' type="text" placeholder='Highlight' />
+                                <input defaultValue={defaultTrip.highlight} onChange={handleChangeDescribeForm} id='highlight' className='w-[400px] outline-none border rounded-[10px] p-[10px]' type="text" placeholder='Highlight' />
                             </div>
                             <div className='my-[20px]'>
                                 <div className='mb-[10px]'>Highlight details</div>
-                                <textarea onChange={handleChangeDescribeForm} id='highlightDesc' className='w-[400px] outline-none border rounded-[10px] p-[10px]' type="text" placeholder='Highlight details' />
+                                <textarea defaultValue={defaultTrip.highlightDesc} onChange={handleChangeDescribeForm} id='highlightDesc' className='w-[400px] outline-none border rounded-[10px] p-[10px]' type="text" placeholder='Highlight details' />
                             </div>
                             <div className='my-[20px]'>
                                 <div className='mb-[10px] font-semibold'>Now, set your PRICE</div>
                                 <div className='flex gap-[10px] items-center'>
                                     <div><MdAttachMoney className='text-[30px]' /></div>
-                                    <input onChange={handleChangeDescribeForm} id='price' className='w-[200px] h-[50px] outline-none border rounded-[10px] p-[10px]' type="number" placeholder={100} />
+                                    <input defaultValue={defaultTrip.price} onChange={handleChangeDescribeForm} id='price' className='w-[200px] h-[50px] outline-none border rounded-[10px] p-[10px]' type="number" placeholder={100} />
                                 </div>
                             </div>
                         </div>
@@ -692,7 +712,7 @@ const CreatePlace = () => {
                         type='submit'
                         className='rounded-[10px] w-[200px] h-[50px] bg-red-400 hover:opacity-70 cursor-pointer'
                     >
-                        CREATE YOUR PLACE
+                        UPDATE YOUR PLACE
                     </button>
                 </form>
             </div>
@@ -725,4 +745,4 @@ const Wrapper = styled.section`
     
 `
 
-export default CreatePlace
+export default UpdateList
