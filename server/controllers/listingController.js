@@ -34,33 +34,21 @@ export const createListing = async (req, res, next) => {
   }
 };
 
-export const getAllListing = async (req, res, next) => {
-  if (!req.user.isAdmin) {
-    return res
-      .status(400)
-      .json({ message: "You must be an admin to view this" });
+export const getRecentListing = async (req, res, next) => {
+  try {
+    const { limitNumber } = req.params;
+    const limitListing = parseInt(limitNumber);
+    const listing = await Listing.find()
+      .limit(limitListing)
+      .sort({ createdAt: -1 });
+
+    if (listing.length === 0) {
+      return res.status(200).json({ message: "No listing found" });
+    }
+    res.status(200).json(listing);
+  } catch (error) {
+    next(error);
   }
-
-  const listing = await Listing.find();
-  const totalListing = await Listing.countDocuments();
-
-  const now = new Date();
-  const oneMonthAgo = new Date(
-    now.getFullYear(),
-    now.getMonth() - 1,
-    now.getDate()
-  );
-
-  const lastMonthListings = await Listing.countDocuments({
-    createdAt: { $gte: oneMonthAgo },
-  });
-
-  res.status(200).json({
-    message: "Get all listings successfully",
-    totalListing,
-    lastMonthListings,
-    listing,
-  });
 };
 
 export const getListing = async (req, res, next) => {

@@ -163,7 +163,7 @@ const Listings = () => {
 
     const { listings } = useSelector((state) => state.user);
 
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [selectedCategory, setSelectedCategory] = useState("All");
 
     const fetchListing = async () => {
@@ -192,7 +192,7 @@ const Listings = () => {
 
     return (
         <Wrapper>
-            
+
             {/* CATEGORY CHOICE */}
             <div className='py-[50px] px-[80px]'>
                 <Slider {...settings}>
@@ -208,7 +208,11 @@ const Listings = () => {
             </div>
 
             {/* LISTINGS */}
-            {loading ? (<Loader />) : (
+            {loading ? (
+                <div className="mt-[50px]" >
+                    <Loader />
+                </div>
+            ) : (
 
                 <div className='contain mx-[80px]'>
                     {listings?.map(({

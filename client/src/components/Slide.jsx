@@ -14,7 +14,7 @@ const Slide = () => {
   };
 
   return (
-    <div className='w-[1000px] max-md:w-full mx-auto '>
+    <div className='w-[1000px] max-md:w-full mx-auto mb-[20px] '>
       <div className=''>
         <Slider {...settings}>
           <div className='w-3/4 h-[400px]'>

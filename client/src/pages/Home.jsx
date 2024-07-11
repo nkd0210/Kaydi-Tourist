@@ -2,7 +2,8 @@ import Categories from '../components/Categories';
 import Navbar from '../components/Navbar';
 import Slide from '../components/Slide';
 import Listings from '../components/Listings';
-import Blog from '../components/Blog';
+import Footer from '../components/Footer';
+import Post from '../components/Post';
 
 const Home = () => {
 
@@ -12,7 +13,8 @@ const Home = () => {
       <Slide />
       <Categories />
       <Listings />
-      <Blog />
+      <Post />
+      <Footer />
     </>
   )
 }

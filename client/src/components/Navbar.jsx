@@ -5,8 +5,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { IconButton } from "@mui/material";
 import { Search, Person, Menu } from "@mui/icons-material";
 import { signOutSuccess } from '../redux/user/userSlice'
-import { FaRegUserCircle } from "react-icons/fa";
-import Logo from '/Kaydi.png';
 
 const Navbar = () => {
 
@@ -91,11 +89,12 @@ const Navbar = () => {
                 {dropdownMenu && currentUser && (
                     <div className='absolute right-[20px] max-md:right-[10px] top-[90px] max-md:top-[90px] border shadow-lg rounded-[10px] flex flex-col z-30 '>
                         <Link className=' bg-gray-100 border-b-[1px] border-gray-400 p-[8px] hover:bg-gray-200 rounded-t-[10px]'>Message</Link>
-                        <Link to={`/trip/${currentUser._id}`} className=' bg-gray-100 border-b-[1px] border-gray-400 p-[8px] hover:bg-gray-200'>Booked Trip</Link>
-                        <Link to={`/wishlist/${currentUser._id}`} className=' bg-gray-100 border-b-[1px] border-gray-400 p-[8px] hover:bg-gray-200'>Favorite Trip</Link>
-                        <Link to={`/propertylist/${currentUser._id}`} className=' bg-gray-100 border-b-[1px] border-gray-400 p-[8px] hover:bg-gray-200'>Your Trip</Link>
-                        <Link to={`/reservationlist/${currentUser._id}`} className=' bg-gray-100 border-b-[1px] border-gray-400 p-[8px] hover:bg-gray-200'>Customer booked</Link>
                         <Link to='/createPlace' className='bg-gray-100 border-b-[1px] border-gray-400 p-[8px] hover:bg-gray-200'>Create your trip</Link>
+                        <Link to={`/propertylist/${currentUser._id}`} className=' bg-gray-100 border-b-[1px] border-gray-400 p-[8px] hover:bg-gray-200'>Your Trip</Link>
+                        <Link to={`/wishlist/${currentUser._id}`} className=' bg-gray-100 border-b-[1px] border-gray-400 p-[8px] hover:bg-gray-200'>Favorite Trip</Link>
+                        <Link to={`/trip/${currentUser._id}`} className=' bg-gray-100 border-b-[1px] border-gray-400 p-[8px] hover:bg-gray-200'>Booked Trip</Link>
+                        <Link to={`/reservationlist/${currentUser._id}`} className=' bg-gray-100 border-b-[1px] border-gray-400 p-[8px] hover:bg-gray-200'>Customer booked</Link>
+                        <Link to={`/post/create/${currentUser._id}`} className=' bg-gray-100 border-b-[1px] border-gray-400 p-[8px] hover:bg-gray-200'>Create Post</Link>
                         <Link className='bg-gray-100 p-[8px] hover:bg-gray-200 rounded-b-[10px] text-red-400' onClick={handleSignOut}>Log out</Link>
                     </div>
                 )}

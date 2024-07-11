@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-
+import Loader from '../components/Loader';
 // IMAGE UPLOAD
 import { app } from '../firebase';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
@@ -259,6 +259,8 @@ const CreatePlace = () => {
         }
     ];
 
+    const [loading, setLoading] = useState(true);
+
 
     // HANDLE UPLOAD IMAGE
     const fileRef = useRef(null);
@@ -443,17 +445,6 @@ const CreatePlace = () => {
             }
         } catch (error) {
             console.log(error.message);
-        }
-    }
-
-    // FETCH LISTING
-    const fetchListing = async () => {
-        try {
-            const res = await fetch(`/api/listing/getlisting`);
-            const data = await res.json();
-
-        } catch (error) {
-            console.log(error.message)
         }
     }
 

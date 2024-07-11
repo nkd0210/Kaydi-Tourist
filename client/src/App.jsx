@@ -13,6 +13,7 @@ import ReservationList from './pages/ReservationList';
 import Statistic from './pages/Statistic';
 import UpdateList from './pages/UpdateList';
 import SearchPage from './pages/SearchPage';
+import CreatePost from './pages/CreatePost'
 
 function App() {
 
@@ -32,6 +33,7 @@ function App() {
         <Route path='/statistic/:tripId' element={<Statistic />} />
         <Route path='/update/:tripId' element={<UpdateList />} />
         <Route path='/search/:searchKeyWord' element={<SearchPage />} />
+        <Route path='/post/create/:userId' element={<CreatePost />} />
       </Routes>
     </BrowserRouter>
   )

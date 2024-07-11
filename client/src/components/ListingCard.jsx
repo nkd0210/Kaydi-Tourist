@@ -12,9 +12,6 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { Favorite } from "@mui/icons-material";
-import { FaRegHeart } from "react-icons/fa";
-
-
 
 const ListingCard = ({ listingId, creator, listingPhotoPaths, city, province, country, category, type, price, startDate, endDate, totalPrice, booking, }) => {
 

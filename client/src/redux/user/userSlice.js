@@ -4,6 +4,7 @@ const initialState = {
   currentUser: null,
   error: null,
   listings: null,
+  recentposts: null,
 };
 
 const userSlice = createSlice({
@@ -61,10 +62,6 @@ const userSlice = createSlice({
       state.listings = action.payload;
       state.error = null;
     },
-    setTripListStart: (state, action) => {
-      state.currentUser.tripList = null;
-      state.error = null;
-    },
     setTripList: (state, action) => {
       state.currentUser.tripList = action.payload;
       state.error = null;
@@ -73,20 +70,20 @@ const userSlice = createSlice({
       state.currentUser.wishList = action.payload;
       state.error = null;
     },
-    setPropertyListStart: (state, action) => {
-      state.currentUser.propertyList = null;
-      state.error = null;
-    },
     setPropertyList: (state, action) => {
       state.currentUser.propertyList = action.payload;
       state.error = null;
     },
-    setReservationListStart: (state, action) => {
-      state.currentUser.reservationList = null;
-      state.error = null;
-    },
     setReservationList: (state, action) => {
       state.currentUser.reservationList = action.payload;
+      state.error = null;
+    },
+    setRecentPostStart: (state, action) => {
+      state.recentposts = null;
+      state.error = null;
+    },
+    setRecentPost: (state, action) => {
+      state.recentposts = action.payload;
       state.error = null;
     },
   },
@@ -109,12 +106,11 @@ export const {
   setListingsStart,
   setListings,
   setWishList,
-  setTripListStart,
   setTripList,
-  setPropertyListStart,
   setPropertyList,
-  setReservationListStart,
   setReservationList,
+  setRecentPostStart,
+  setRecentPost,
 } = userSlice.actions;
 
 export default userSlice.reducer;
