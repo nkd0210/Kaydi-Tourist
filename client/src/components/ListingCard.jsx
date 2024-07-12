@@ -64,7 +64,7 @@ const ListingCard = ({ listingId, creator, listingPhotoPaths, city, province, co
         <Wrapper>
             <ToastContainer />
             {currentUser ? (
-                <div onClick={() => { navigate(`/detailplace/${listingId}`) }} className='relative mb-[100px] w-[400px] h-[350px] overflow-x-hidden border rounded-[10px] shadow-lg '>
+                <div onClick={() => { navigate(`/detailplace/${listingId}`) }} className='relative mb-[50px] max-md:mb-[10px] w-[400px] h-[350px] overflow-x-hidden border rounded-[10px] shadow-lg '>
                     {/* IMAGE */}
                     <div className=' w-[400px] h-[200px]'>
                         <Slider {...settings}>
@@ -75,6 +75,7 @@ const ListingCard = ({ listingId, creator, listingPhotoPaths, city, province, co
                             ))}
                         </Slider>
                     </div>
+
                     <button type='button' onClick={handleClickHeart} disabled={!currentUser} className='absolute top-[10px] right-[10px]'>
                         {isLiked ? (
                             <Favorite className='text-red-400 text-[20px] cursor-pointer' />

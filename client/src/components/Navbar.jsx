@@ -15,6 +15,9 @@ const Navbar = () => {
 
     const [searchKeyWord, setSearchKeyWord] = useState("")
     const [dropdownMenu, setDropdownMenu] = useState(false);
+    const [showTripItem, setShowTripItem] = useState(false);
+    const [showPostItem, setShowPostItem] = useState(false);
+    const [showBookedItem, setShowBookedItem] = useState(false);
 
     const handleSignOut = async (e) => {
         e.preventDefault();
@@ -67,7 +70,7 @@ const Navbar = () => {
                 )}
 
                 <button className=' flex border border-gray-500 rounded-[20px] p-[10px] gap-[10px] items-center justify-center' >
-                    <Menu onClick={() => setDropdownMenu(!dropdownMenu)} />
+                    <Menu onClick={() => { setDropdownMenu(!dropdownMenu); setShowPostItem(false); setShowTripItem(false); setShowBookedItem(false) }} />
                     {currentUser ? (
                         <div className='w-[40px] h-[40px] rounded-[50%] '>
                             <Link to='/profile'>
@@ -87,15 +90,37 @@ const Navbar = () => {
                 )}
 
                 {dropdownMenu && currentUser && (
-                    <div className='absolute right-[20px] max-md:right-[10px] top-[90px] max-md:top-[90px] border shadow-lg rounded-[10px] flex flex-col z-30 '>
+
+                    <div className='absolute right-[20px] max-md:right-[10px] w-[120px] top-[90px] max-md:top-[90px] border shadow-lg rounded-[10px] flex flex-col z-30 '>
                         <Link className=' bg-gray-100 border-b-[1px] border-gray-400 p-[8px] hover:bg-gray-200 rounded-t-[10px]'>Message</Link>
-                        <Link to='/createPlace' className='bg-gray-100 border-b-[1px] border-gray-400 p-[8px] hover:bg-gray-200'>Create your trip</Link>
-                        <Link to={`/propertylist/${currentUser._id}`} className=' bg-gray-100 border-b-[1px] border-gray-400 p-[8px] hover:bg-gray-200'>Your Trip</Link>
-                        <Link to={`/wishlist/${currentUser._id}`} className=' bg-gray-100 border-b-[1px] border-gray-400 p-[8px] hover:bg-gray-200'>Favorite Trip</Link>
-                        <Link to={`/trip/${currentUser._id}`} className=' bg-gray-100 border-b-[1px] border-gray-400 p-[8px] hover:bg-gray-200'>Booked Trip</Link>
-                        <Link to={`/reservationlist/${currentUser._id}`} className=' bg-gray-100 border-b-[1px] border-gray-400 p-[8px] hover:bg-gray-200'>Customer booked</Link>
-                        <Link to={`/post/create/${currentUser._id}`} className=' bg-gray-100 border-b-[1px] border-gray-400 p-[8px] hover:bg-gray-200'>Create Post</Link>
+                        <div onClick={() => { setShowTripItem(!showTripItem); setShowPostItem(false); setShowBookedItem(false) }} className=' bg-gray-100 border-b-[1px] border-gray-400 p-[8px] hover:bg-gray-200 cursor-pointer'>Trip</div>
+                        <div onClick={() => { setShowBookedItem(!showPostItem); setShowTripItem(false); setShowPostItem(false) }} className=' bg-gray-100 border-b-[1px] border-gray-400 p-[8px] hover:bg-gray-200 cursor-pointer'>Booked</div>
+                        <div onClick={() => { setShowPostItem(!showPostItem); setShowTripItem(false); setShowBookedItem(false) }} className=' bg-gray-100 border-b-[1px] border-gray-400 p-[8px] hover:bg-gray-200 cursor-pointer'>Post</div>
                         <Link className='bg-gray-100 p-[8px] hover:bg-gray-200 rounded-b-[10px] text-red-400' onClick={handleSignOut}>Log out</Link>
+                    </div>
+
+                )}
+
+                {showTripItem && (
+                    <div className='absolute flex flex-col right-[144px] top-[132px] z-30'>
+                        <Link to='/createPlace' className='bg-gray-100 border-b-[1px] border-gray-400 p-[8px] hover:bg-gray-200 rounded-tl-[10px]'>Create your trip</Link>
+                        <Link to={`/propertylist/${currentUser._id}`} className=' bg-gray-100 border-b-[1px] border-gray-400 p-[8px] hover:bg-gray-200'>Your Trip</Link>
+                        <Link to={`/wishlist/${currentUser._id}`} className=' bg-gray-100 border-b-[1px] p-[8px] hover:bg-gray-200 rounded-b-[10px]'>Favorite Trip</Link>
+                    </div>
+                )}
+
+                {showBookedItem && (
+                    <div className='absolute flex flex-col right-[144px] top-[172px] z-30'>
+                        <Link to={`/trip/${currentUser._id}`} className=' bg-gray-100 border-b-[1px] border-gray-400 p-[8px] hover:bg-gray-200 rounded-tl-[10px]'>Booked Trip</Link>
+                        <Link to={`/reservationlist/${currentUser._id}`} className=' bg-gray-100 border-b-[1px]  p-[8px] hover:bg-gray-200 rounded-b-[10px]'>Customer booked</Link>
+                    </div>
+                )}
+
+                {showPostItem && (
+                    <div className='absolute flex flex-col right-[144px] top-[212px] z-30'>
+                        <Link to={`/post/create/${currentUser._id}`} className=' bg-gray-100 border-b-[1px] border-gray-400 p-[8px] hover:bg-gray-200 rounded-tl-[10px]'>Create Post</Link>
+                        <Link to={`/post/getuserpost/${currentUser._id}`} className=' bg-gray-100 border-b-[1px] p-[8px] hover:bg-gray-200 rounded-b-[10px]'>User Post</Link>
+
                     </div>
                 )}
             </div>

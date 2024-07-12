@@ -27,14 +27,6 @@ const CreatePost = () => {
         slidesToScroll: 1
     };
 
-    const formatDate = (isoDate) => {
-        const date = new Date(isoDate);
-        const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const year = date.getFullYear();
-        return `${month}/${day}/${year}`;
-    }
-
     const { currentUser } = useSelector((state) => state.user);
 
     const dispatch = useDispatch();
@@ -149,7 +141,7 @@ const CreatePost = () => {
                 handleShowErrorMessage("Create Post Error, something went wrong!")
                 console.log(data.message);
             } else {
-                navigate('/');
+                navigate(`/post/getuserpost/${currentUser._id}`);
             }
         } catch (error) {
             handleShowErrorMessage("Creat Post Error, something went wrong!")
@@ -164,14 +156,14 @@ const CreatePost = () => {
                 <h2 className='text-center text-[30px] font-semibold mb-[50px]'>Create Your Post</h2>
                 <form onSubmit={handleSubmitForm} className='bg-white p-[20px] flex flex-col gap-[40px]'>
                     {/* TITLE */}
-                    <div className='flex gap-[20px] items-center'>
-                        <h3 className='font-semibold border rounded-[20px] h-[50px] w-[200px] text-center flex items-center justify-center shadow-lg text-[18px]'>What is your title ?</h3>
+                    <div className='flex max-md:flex-col gap-[20px]'>
+                        <h3 className='font-semibold border rounded-[20px] h-[50px] w-[200px] text-center flex items-center justify-center shadow-lg text-[18px] max-md:text-[16px]'>What is your title ?</h3>
                         <input onChange={(e) => setTitle(e.target.value)} type="text" placeholder="Enter your title here" required className='border rounded-[20px] p-[10px] w-[300px] h-[50px] shadow-md' />
                     </div>
 
                     {/* IMAGES */}
                     <div>
-                        <span className='my-[20px] text-[18px] font-semibold border h-[50px] w-[300px] text-center flex items-center justify-center shadow-lg rounded-[20px]'>Add some photos of your place</span>
+                        <span className='my-[20px] text-[18px] max-md:text-[16px] font-semibold border h-[50px] w-[300px] text-center flex items-center justify-center shadow-lg rounded-[20px]'>Add some photos of your place</span>
 
                         <div className='gap-[20px] py-[20px]' ref={fileRef}>
 
@@ -243,7 +235,7 @@ const CreatePost = () => {
 
                     {/* DESCRIBE */}
                     <div className='flex flex-col gap-[20px]'>
-                        <h3 className='font-semibold text-[18px]'>What is your opinion ?</h3>
+                        <h3 className='font-semibold text-[18px] border rounded-[20px] shadow-lg w-[250px] p-[10px]'>What is your opinion ?</h3>
                         <textarea onChange={(e) => setDescribe(e.target.value)} placeholder='Write something here...' className='border h-[200px] p-[10px]'>
 
                         </textarea>

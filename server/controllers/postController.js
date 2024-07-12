@@ -41,7 +41,7 @@ export const deletePost = async (req, res, next) => {
   try {
     const findPost = await Post.findByIdAndDelete(postId);
     if (!findPost) {
-      return res.status(404).json({ message: "Post not found" });
+      return res.status(400).json({ message: "Post not found" });
     }
     res.status(200).json({ message: "Post deleted successfully" });
   } catch (error) {
@@ -129,6 +129,49 @@ export const getRecentPost = async (req, res, next) => {
       return res.status(404).json({ message: "No recent post found!" });
     }
     res.status(200).json(allPost);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getUserPost = async (req, res, next) => {
+  const { userId } = req.params;
+
+  try {
+    const now = new Date();
+
+    const oneMonthAgo = new Date(
+      now.getFullYear(),
+      now.getMonth() - 1,
+      now.getDate()
+    );
+
+    const oneWeekAgo = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate() - 7
+    );
+
+    const lastWeekPost = await Post.find({
+      userId: userId,
+      createdAt: { $gte: oneWeekAgo },
+    });
+
+    const lastMonthPost = await Post.find({
+      userId: userId,
+      createdAt: { $gte: oneMonthAgo },
+    });
+
+    const userPost = await Post.find({ userId: userId }).populate("creator");
+    if (userPost.length === 0) {
+      return res.status(404).json({ message: "No post found for this user!" });
+    }
+    res.status(200).json({
+      userPost,
+      totalPost: userPost.length,
+      lastWeekPost: lastWeekPost.length,
+      lastMonthPost: lastMonthPost.length,
+    });
   } catch (error) {
     next(error);
   }

@@ -214,7 +214,7 @@ const Listings = () => {
                 </div>
             ) : (
 
-                <div className='contain mx-[80px]'>
+                <div className='flex flex-wrap justify-center items-center gap-[50px] max-md:gap-[10px] mx-[80px]'>
                     {listings?.map(({
                         _id,
                         creator,
@@ -247,21 +247,7 @@ const Listings = () => {
 }
 
 const Wrapper = styled.section`
-    .contain {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: flex-start;
-        gap: 50px;
-    }
 
-    @media (max-width:768px) {
-        .contain {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-        }
-    }
 `
 
 export default Listings

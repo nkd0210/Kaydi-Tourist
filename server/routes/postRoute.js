@@ -8,6 +8,7 @@ import {
   getPostBySearch,
   getAllPost,
   getRecentPost,
+  getUserPost,
 } from "../controllers/postController.js";
 
 const router = express.Router();
@@ -19,5 +20,6 @@ router.put("/updatepost/:userId/:postId", verifyToken, updatePost);
 router.get("/search/:postKeyWord", getPostBySearch);
 router.get("/getallposts", getAllPost);
 router.get("/getrecentpost/:limitPost", getRecentPost);
+router.get("/getuserpost/:userId", verifyToken, getUserPost);
 
 export default router;

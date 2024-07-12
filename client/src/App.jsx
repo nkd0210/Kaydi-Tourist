@@ -14,6 +14,9 @@ import Statistic from './pages/Statistic';
 import UpdateList from './pages/UpdateList';
 import SearchPage from './pages/SearchPage';
 import CreatePost from './pages/CreatePost'
+import PostDetail from './pages/PostDetail'
+import UserPost from './pages/UserPost'
+import UpdatePost from './pages/UpdatePost'
 
 function App() {
 
@@ -34,6 +37,9 @@ function App() {
         <Route path='/update/:tripId' element={<UpdateList />} />
         <Route path='/search/:searchKeyWord' element={<SearchPage />} />
         <Route path='/post/create/:userId' element={<CreatePost />} />
+        <Route path='/post/detailpost/:postId' element={<PostDetail />} />
+        <Route path='/post/getuserpost/:userId' element={<UserPost />} />
+        <Route path='/post/updatepost/:postId' element={<UpdatePost />} />
       </Routes>
     </BrowserRouter>
   )

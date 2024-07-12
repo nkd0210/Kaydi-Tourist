@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 
-import ListingCard from '../components/ListingCard';
 import Navbar from '../components/Navbar'
 import { setPropertyList } from '../redux/user/userSlice';
 

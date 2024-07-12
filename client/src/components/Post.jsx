@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import ListingCard from './ListingCard';
 import Loader from './Loader';
 import { setRecentPost, setRecentPostStart } from '../redux/user/userSlice';
 // CAROUSEL
@@ -46,16 +44,16 @@ const Post = () => {
 
     const [loading, setLoading] = useState(true);
     return (
-        <div className='pb-[50px] px-[80px]'>
+        <div className='pb-[50px] px-[80px] max-md:px-[10px]'>
             <h1 className='text-[30px] text-center font-semibold text-slate-700 mb-[50px]'>Some Recents Posts</h1>
             {loading ? (
                 <div className="mt-[50px]" >
                     <Loader />
                 </div>
             ) : (
-                <div className='flex flex-wrap gap-[50px] justify-start'>
+                <div className='flex flex-wrap gap-[50px] justify-center items-center'>
                     {recentposts?.map((post, index) => (
-                        <div key={index} className='w-[400px] h-[300px] overflow-x-hidden border rounded-[10px] shadow-lg'>
+                        <div onClick={() => navigate(`/post/detailpost/${post._id}`)} key={index} className='w-[400px] h-[300px] overflow-x-hidden border rounded-[10px] shadow-lg'>
                             {/* IMAGE */}
                             <div className=' w-[400px] h-[200px]'>
                                 <Slider {...settings}>
