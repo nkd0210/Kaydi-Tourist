@@ -9,6 +9,8 @@ import userRoute from "./routes/userRoute.js";
 import listingRoute from "./routes/listingRoute.js";
 import bookingRoute from "./routes/bookingRoute.js";
 import postRoute from "./routes/postRoute.js";
+import commentRoute from "./routes/commentRoute.js";
+
 dotenv.config();
 
 mongoose
@@ -35,3 +37,4 @@ app.use("/api/user", userRoute);
 app.use("/api/listing", listingRoute);
 app.use("/api/booking", bookingRoute);
 app.use("/api/post", postRoute);
+app.use("/api/comment", commentRoute);

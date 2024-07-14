@@ -14,6 +14,11 @@ const commentSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    creator: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
     likes: {
       type: Array,
       default: [],
@@ -21,10 +26,6 @@ const commentSchema = new mongoose.Schema(
     numberOfLikes: {
       type: Number,
       default: 0,
-    },
-    postTitle: {
-      type: String,
-      required: true,
     },
   },
   { timestamps: true }

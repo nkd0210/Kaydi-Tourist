@@ -94,7 +94,7 @@ const SearchPage = () => {
                             </div>
                             <div className='flex flex-wrap gap-[50px]'>
                                 {searchList?.map((trip, index) => (
-                                    <div key={index} onClick={() => navigate(`/detailplace/${trip._id}`)} className='w-[400px]'>
+                                    <div key={index} onClick={() => navigate(!currentUser ? '/signin' : `/detailplace/${trip._id}`)} className='w-[400px]'>
                                         <div className='relative mb-[100px] border rounded-[10px] shadow-lg bg-gray-50'>
 
                                             {/* IMAGE */}
