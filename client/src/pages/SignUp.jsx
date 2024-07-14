@@ -19,6 +19,7 @@ import Photographer3 from '/assets/photographer3.jpg';
 import Photographer4 from '/assets/photographer4.jpg';
 import Photographer5 from '/assets/photographer5.jpg';
 import { signUpFailure, signUpStart, signUpSuccess } from '../redux/user/userSlice';
+import OAuth from '../components/OAuth';
 
 const SignUp = () => {
 
@@ -50,18 +51,18 @@ const SignUp = () => {
 
     const handleChange = (e) => {
         e.preventDefault();
-        setFormData({...formData, [e.target.id]: e.target.value});
+        setFormData({ ...formData, [e.target.id]: e.target.value });
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if(!formData.username || !formData.email || !formData.password) {
+        if (!formData.username || !formData.email || !formData.password) {
             dispatch(signUpFailure("All fields are required"));
             handleShowErrorMessage("All fields are required");
             return;
         }
 
-        if(formData.password !== confirmPwd) {
+        if (formData.password !== confirmPwd) {
             dispatch(signUpFailure("Passwords do not match"));
             handleShowErrorMessage("Passwords do not match");
             return;
@@ -78,11 +79,11 @@ const SignUp = () => {
 
             const data = await res.json();
 
-            if(!res.ok){
+            if (!res.ok) {
                 dispatch(signUpFailure(data.message));
                 handleShowErrorMessage(data.message);
                 return;
-            }else {
+            } else {
                 navigate('/signin');
             }
 
@@ -103,35 +104,35 @@ const SignUp = () => {
 
                         <div className='w-3/4 max-md:w-full border border-blue-300 rounded-[20px] flex items-center text-center gap-[10px] p-[5px] '>
                             <HiOutlineUser className='text-gray-400 mx-[10px]  ' />
-                            <input 
+                            <input
                                 id='username'
                                 onChange={handleChange}
-                                type="text" 
-                                placeholder='Username' 
-                                className='outline-none bg-transparent w-full backdrop-blur-sm' 
+                                type="text"
+                                placeholder='Username'
+                                className='outline-none bg-transparent w-full backdrop-blur-sm'
                             />
                         </div>
 
                         <div className='w-3/4 max-md:w-full border border-blue-300 rounded-[20px] flex items-center text-center gap-[10px] p-[5px] '>
                             <TfiEmail className='text-gray-400 mx-[10px]' />
-                            <input 
+                            <input
                                 id='email'
                                 onChange={handleChange}
-                                type="email" 
-                                placeholder='Email' 
-                                className=' outline-none bg-transparent w-full backdrop-blur-sm ' 
+                                type="email"
+                                placeholder='Email'
+                                className=' outline-none bg-transparent w-full backdrop-blur-sm '
                             />
                         </div>
 
                         <div className='w-3/4 max-md:w-full border border-blue-300 rounded-[20px] flex justify-between items-center text-center gap-[10px] p-[5px] '>
                             <div className='flex items-center'>
                                 <RiLockPasswordLine className='text-gray-400 mx-[10px] text-[20px]' />
-                                <input 
+                                <input
                                     id='password'
                                     onChange={handleChange}
-                                    type={showPassword ? 'text' : 'password'} 
-                                    placeholder='Password' 
-                                    className='mx-[10px] outline-none bg-transparent w-full backdrop-blur-sm' 
+                                    type={showPassword ? 'text' : 'password'}
+                                    placeholder='Password'
+                                    className='mx-[10px] outline-none bg-transparent w-full backdrop-blur-sm'
                                 />
                             </div>
                             <button onClick={handleShowPassword} className='mx-[10px]'>
@@ -146,11 +147,11 @@ const SignUp = () => {
                         <div className='w-3/4 max-md:w-full border border-blue-300 rounded-[20px] flex justify-between items-center text-center gap-[10px] p-[5px] '>
                             <div className='flex items-center'>
                                 <RiLockPasswordLine className='text-gray-400 mx-[10px] text-[20px]' />
-                                <input 
+                                <input
                                     onChange={handleConfirmPwd}
-                                    type={showConfirmPwd ? 'text' : 'password'} 
-                                    placeholder='Confirm password' 
-                                    className='mx-[10px] outline-none bg-transparent w-full backdrop-blur-sm' 
+                                    type={showConfirmPwd ? 'text' : 'password'}
+                                    placeholder='Confirm password'
+                                    className='mx-[10px] outline-none bg-transparent w-full backdrop-blur-sm'
                                 />
                             </div>
                             <button onClick={handleShowConfirmPwd} className='mx-[10px]'>
@@ -168,9 +169,7 @@ const SignUp = () => {
 
                         <hr className='w-3/4 max-md:w-full bg-gray-300 h-[2px]' />
 
-                        <button type='submit' className='w-3/4 max-md:w-full border-blue-300 border rounded-[20px] p-[5px] bg-blue-300 text-white hover:bg-opacity-70 hover:text-black'>
-                            Sign up with Google
-                        </button>
+                        <OAuth />
 
                         <div className='text-gray-500 max-md:text-white flex gap-[10px] backdrop-blur-sm'>
                             Already have an account ?

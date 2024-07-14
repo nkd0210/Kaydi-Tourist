@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import OAuth from '../components/OAuth';
 // TOAST
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -123,9 +124,7 @@ const SignIn = () => {
 
             <hr className='w-3/4 max-md:w-full bg-gray-300 h-[2px]' />
 
-            <button type='submit' className='w-3/4 max-md:w-full border-blue-300 border rounded-[20px] p-[5px] bg-blue-300 text-white hover:bg-opacity-70 hover:text-black'>
-              Sign in with Google
-            </button>
+            <OAuth />
 
             <div className='text-gray-500 max-md:text-white flex gap-[10px] backdrop-blur-sm'>
               Don't have any account ?
