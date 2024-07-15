@@ -86,6 +86,7 @@ const userSlice = createSlice({
       state.recentposts = action.payload;
       state.error = null;
     },
+    
   },
 });
 

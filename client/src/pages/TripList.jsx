@@ -14,6 +14,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { Button, Modal } from "flowbite-react";
 
+import { loadStripe } from '@stripe/stripe-js';
+
 const TripList = () => {
     var settings = {
         dots: false,
@@ -65,8 +67,10 @@ const TripList = () => {
         toast.success(message);
     }
 
+    // CANCEL TRIP
     const [showModal, setShowModal] = useState(false);
     const [bookingIdToDelete, setBookingIdToDelete] = useState('');
+    const [cancelTrip, setCancelTrip] = useState(false); // check if cancel of payment
 
     const handleCancelTrip = async () => {
         setShowModal(false);
@@ -87,6 +91,61 @@ const TripList = () => {
                 setShowModal(false);
             }
 
+        } catch (error) {
+            console.log(error.message);
+        }
+    }
+
+    // PAYMENT WITH STRIPE
+    const [bookingIdToPayment, setBookingIdToPayment] = useState('');
+    const [findBookedTrip, setFindBookedTrip] = useState([]);
+    const [paymentTrip, setPaymentTrip] = useState(false);
+
+    const findBookingToPayment = async () => {
+        const res = await fetch(`/api/booking/findbooking/${bookingIdToPayment}`, {
+            method: "GET"
+        });
+        const data = await res.json();
+        if (!res.ok) {
+            console.log(data.message);
+            return;
+        }
+        else {
+            setFindBookedTrip(data);
+        }
+    }
+
+    useEffect(() => {
+        if (bookingIdToPayment) {
+            findBookingToPayment();
+        }
+    }, [bookingIdToPayment])
+
+    console.log(findBookedTrip);
+
+    const handlePayment = async () => {
+        const stripe = await loadStripe("pk_test_51OucB4ELWvlzH2IqBRjByawqzrhsRKGxcCDhfxTCVIv7wYIkTKAWeJhgs2F1199zZG1Sg0Yz5Up34dyobBlfeVdd003S8HlkKQ");
+        try {
+            const res = await fetch(`/api/booking/payment`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    title: findBookedTrip?.listingId?.title,
+                    image: findBookedTrip?.listingId?.listingPhotoPaths[0],
+                    totalPrice: findBookedTrip?.totalPrice
+                })
+            });
+            const session = await res.json();
+            const result = stripe.redirectToCheckout({
+                sessionId: session.id
+            });
+            if (result.error) {
+                console.log(result.error);
+            }else {
+                
+            }
         } catch (error) {
             console.log(error.message);
         }
@@ -141,8 +200,11 @@ const TripList = () => {
                                     </div>
                                 </div>
 
-                                <button type='button' disabled={!currentUser} onClick={(e) => { e.stopPropagation(); setBookingIdToDelete(trip._id); setShowModal(true) }} className='border w-[120px] rounded-[10px] p-[10px] my-[10px] ml-[10px] text-center bg-red-400 hover:opacity-70 hover:text-white'>
+                                <button type='button' disabled={!currentUser} onClick={(e) => { e.stopPropagation(); setBookingIdToDelete(trip._id); setCancelTrip(true); setShowModal(true) }} className='border w-[120px] rounded-[10px] p-[10px] my-[10px] ml-[10px] text-center bg-red-400 hover:opacity-70 hover:text-white'>
                                     Cancel trip
+                                </button>
+                                <button type='button' disabled={!currentUser} onClick={(e) => { e.stopPropagation(); setBookingIdToPayment(trip._id); setPaymentTrip(true); setShowModal(true) }} className='border w-[120px] rounded-[10px] p-[10px] my-[10px] ml-[10px] text-center bg-blue-400 hover:opacity-70 hover:text-white'>
+                                    Payment
                                 </button>
                             </div>
                         </div>
@@ -150,7 +212,7 @@ const TripList = () => {
                     ))}
                 </div>
             </div>
-            {showModal && (
+            {showModal && cancelTrip ? (
                 <div className='modal fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm'>
                     <Modal className='w-[400px] h-[300px] mx-auto mt-[200px]' show={showModal} size="md" onClose={() => setShowModal(false)} popup>
                         <Modal.Header />
@@ -164,7 +226,51 @@ const TripList = () => {
                                     <Button className='bg-red-400 p-[10px] rounded-[10px]' onClick={handleCancelTrip}>
                                         Yes, I'm sure
                                     </Button>
-                                    <Button className='bg-gray-400 p-[10px] rounded-[10px]' onClick={() => setShowModal(false)}>
+                                    <Button className='bg-gray-400 p-[10px] rounded-[10px]' onClick={() => { setShowModal(false); setCancelTrip(false) }}>
+                                        No, cancel
+                                    </Button>
+                                </div>
+                            </div>
+                        </Modal.Body>
+                    </Modal>
+                </div>
+            ) : showModal && paymentTrip && (
+                <div className='modal fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm'>
+                    <Modal className='w-[400px] h-[400px] rounded-[10px]  mx-auto mt-[200px]' show={showModal} size="md" onClose={() => setShowModal(false)} popup>
+                        <Modal.Header />
+                        <Modal.Body>
+                            <div className="text-center p-[10px]">
+                                <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-red-400" />
+                                <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+                                    Please check again your payment information:
+                                </h3>
+                                <div>
+                                    <div className='flex gap-[20px]'>
+                                        <span className='w-[80px]'>Location: </span>
+                                        <div>{findBookedTrip?.listingId?.title}</div>
+                                    </div>
+                                    <div className='flex gap-[20px]'>
+                                        <span className='w-[80px]'>Owner: </span>
+                                        <div>{findBookedTrip?.hostId?.username}</div>
+                                    </div>
+                                    <div className='flex gap-[20px]'>
+                                        <span className='w-[80px]'>Start date: </span>
+                                        <div>{formatDate(findBookedTrip?.startDate)}</div>
+                                    </div>
+                                    <div className='flex gap-[20px]'>
+                                        <span className='w-[80px]'>End date: </span>
+                                        <div>{formatDate(findBookedTrip?.endDate)}</div>
+                                    </div>
+                                    <div className='flex gap-[20px] pb-[20px]'>
+                                        <span className='w-[80px]'>Total price: </span>
+                                        <div>{findBookedTrip?.totalPrice}</div>
+                                    </div>
+                                </div>
+                                <div className="flex justify-center gap-[20px] mb-[20px]">
+                                    <Button className='bg-red-400 p-[10px] rounded-[10px]' onClick={handlePayment}>
+                                        Yes, I'm sure
+                                    </Button>
+                                    <Button className='bg-gray-400 p-[10px] rounded-[10px]' onClick={() => { setShowModal(false); setPaymentTrip(false) }}>
                                         No, cancel
                                     </Button>
                                 </div>

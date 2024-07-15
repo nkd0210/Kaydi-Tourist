@@ -17,6 +17,8 @@ import CreatePost from './pages/CreatePost'
 import PostDetail from './pages/PostDetail'
 import UserPost from './pages/UserPost'
 import UpdatePost from './pages/UpdatePost'
+import Success from './pages/Success'
+import Cancel from './pages/Cancel'
 
 function App() {
 
@@ -40,6 +42,8 @@ function App() {
         <Route path='/post/detailpost/:postId' element={<PostDetail />} />
         <Route path='/post/getuserpost/:userId' element={<UserPost />} />
         <Route path='/post/updatepost/:postId' element={<UpdatePost />} />
+        <Route path='/success' element={<Success />} />
+        <Route path='/cancel' element={<Cancel />} />
       </Routes>
     </BrowserRouter>
   )
