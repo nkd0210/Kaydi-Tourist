@@ -23,13 +23,14 @@ mongoose
   });
 
 const app = express();
+const port = process.env.PORT || 3000;
 
 app.use(express.json()); // allow json as the input of the BE
 app.use(cookieParser());
 app.use(cors());
 
-app.listen(3000, () => {
-  console.log("Server listening on port 3000");
+app.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
 });
 
 app.use("/api/auth", authRoute);
