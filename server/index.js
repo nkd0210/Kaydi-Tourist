@@ -32,10 +32,18 @@ app.use(cors());
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });
+const frontendUrl = "https://kaydi-tourist-fe.onrender.com";
 
-app.use("/api/auth", authRoute);
-app.use("/api/user", userRoute);
-app.use("/api/listing", listingRoute);
-app.use("/api/booking", bookingRoute);
-app.use("/api/post", postRoute);
-app.use("/api/comment", commentRoute);
+// app.use("/api/auth", authRoute);
+// app.use("/api/user", userRoute);
+// app.use("/api/listing", listingRoute);
+// app.use("/api/booking", bookingRoute);
+// app.use("/api/post", postRoute);
+// app.use("/api/comment", commentRoute);
+
+app.use(`${frontendUrl}/api/auth`, authRoute);
+app.use(`${frontendUrl}/api/user`, userRoute);
+app.use(`${frontendUrl}/api/listing`, listingRoute);
+app.use(`${frontendUrl}/api/booking`, bookingRoute);
+app.use(`${frontendUrl}/api/post`, postRoute);
+app.use(`${frontendUrl}/api/comment`, commentRoute);
