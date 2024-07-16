@@ -6,8 +6,8 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        // target: 'http://localhost:3000',
-        target: "https://kaydi-tourist.onrender.com",
+        target: 'http://localhost:3000',
+        // target: "https://kaydi-tourist.onrender.com",
         secure: false,
       },
     },
