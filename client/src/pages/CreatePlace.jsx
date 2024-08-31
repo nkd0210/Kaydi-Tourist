@@ -580,6 +580,7 @@ const CreatePlace = () => {
                                 ))}
                             </div>
                         </div>
+
                         {/* IMAGES */}
                         <div>
                             <span className='my-[20px] text-[18px] font-semibold'>Add some photos of your place</span>
