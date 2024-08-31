@@ -30,7 +30,7 @@ app.use(express.json()); // allow json as the input of the BE
 app.use(cookieParser());
 app.use(
   cors({
-    origin: ["https://kaydi-tourist.vercel.app/"],
+    origin: ["https://kaydi-tourist.vercel.app"],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
   })
