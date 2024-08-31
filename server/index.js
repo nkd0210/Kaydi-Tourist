@@ -28,10 +28,20 @@ const port = process.env.PORT || 3000;
 
 app.use(express.json()); // allow json as the input of the BE
 app.use(cookieParser());
-app.use(cors());
+app.use(
+  cors({
+    origin: ["https://kaydi-tourist.vercel.app/"],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+  })
+);
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
+});
+
+app.get("/", (req, res) => {
+  res.json("Hello");
 });
 
 app.use("/api/auth", authRoute);
